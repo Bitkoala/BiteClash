@@ -231,7 +231,9 @@ class _StartButtonState extends ConsumerState<StartButton>
                 border: Border.all(
                   color: isRunning
                       ? const Color(0xFF22D3EE)
-                      : (isDark ? const Color(0xFF334155) : const Color(0xFFCBD5E1)),
+                      : (isDark
+                            ? const Color(0xFF334155)
+                            : const Color(0xFFCBD5E1)),
                   width: 1.5,
                 ),
                 boxShadow: [
@@ -269,7 +271,11 @@ class _StartButtonState extends ConsumerState<StartButton>
                       child: AnimatedIcon(
                         icon: AnimatedIcons.play_pause,
                         progress: _animation,
-                        color: isRunning ? Colors.white : (isDark ? const Color(0xFF06B6D4) : const Color(0xFF0284C7)),
+                        color: isRunning
+                            ? Colors.white
+                            : (isDark
+                                  ? const Color(0xFF06B6D4)
+                                  : const Color(0xFF0284C7)),
                       ),
                     ),
                     SizeTransition(

@@ -171,7 +171,9 @@ class _SidebarRail extends StatelessWidget {
                     height: 48,
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? colorScheme.primary.withValues(alpha: isDark ? 0.22 : 0.15)
+                          ? colorScheme.primary.withValues(
+                              alpha: isDark ? 0.22 : 0.15,
+                            )
                           : Colors.transparent,
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(
@@ -183,7 +185,9 @@ class _SidebarRail extends StatelessWidget {
                       boxShadow: isSelected && isDark
                           ? [
                               BoxShadow(
-                                color: colorScheme.primary.withValues(alpha: 0.25),
+                                color: colorScheme.primary.withValues(
+                                  alpha: 0.25,
+                                ),
                                 blurRadius: 10,
                                 offset: const Offset(0, 2),
                               ),
@@ -228,10 +232,15 @@ class _SidebarRail extends StatelessWidget {
               hoverColor: colorScheme.primary.withValues(alpha: 0.08),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? colorScheme.primary.withValues(alpha: isDark ? 0.22 : 0.15)
+                      ? colorScheme.primary.withValues(
+                          alpha: isDark ? 0.22 : 0.15,
+                        )
                       : Colors.transparent,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(
@@ -267,7 +276,9 @@ class _SidebarRail extends StatelessWidget {
                         item.label.label,
                         style: TextStyle(
                           fontSize: 13,
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.w500,
                           color: isSelected
                               ? (isDark ? Colors.white : colorScheme.primary)
                               : colorScheme.onSurface.withValues(alpha: 0.85),
@@ -315,10 +326,14 @@ class AppSidebarContainer extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? const Color(0xFF0A0F1D) : context.colorScheme.surfaceContainer,
+        color: isDark
+            ? const Color(0xFF0A0F1D)
+            : context.colorScheme.surfaceContainer,
         border: Border(
           right: BorderSide(
-            color: isDark ? const Color(0xFF1E293B) : context.colorScheme.outlineVariant.withValues(alpha: 0.3),
+            color: isDark
+                ? const Color(0xFF1E293B)
+                : context.colorScheme.outlineVariant.withValues(alpha: 0.3),
             width: 1,
           ),
         ),
@@ -361,7 +376,9 @@ class AppSidebarContainer extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      color: isDark ? const Color(0xFF070B14) : context.colorScheme.surfaceContainer,
+      color: isDark
+          ? const Color(0xFF070B14)
+          : context.colorScheme.surfaceContainer,
       child: Row(
         children: [
           AnimatedVisibility.sidebar(
@@ -378,7 +395,10 @@ class AppSidebarContainer extends ConsumerWidget {
                       if (showLabel)
                         Container(
                           width: 210,
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
                           child: Row(
                             children: [
                               Container(
@@ -386,14 +406,19 @@ class AppSidebarContainer extends ConsumerWidget {
                                 height: 38,
                                 decoration: BoxDecoration(
                                   gradient: const LinearGradient(
-                                    colors: [Color(0xFF06B6D4), Color(0xFF3B82F6)],
+                                    colors: [
+                                      Color(0xFF06B6D4),
+                                      Color(0xFF3B82F6),
+                                    ],
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
                                   borderRadius: BorderRadius.circular(12),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: const Color(0xFF06B6D4).withValues(alpha: 0.35),
+                                      color: const Color(
+                                        0xFF06B6D4,
+                                      ).withValues(alpha: 0.35),
                                       blurRadius: 10,
                                       offset: const Offset(0, 3),
                                     ),
@@ -422,7 +447,10 @@ class AppSidebarContainer extends ConsumerWidget {
                                       'Universal Proxy Engine',
                                       style: TextStyle(
                                         fontSize: 10,
-                                        color: context.colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                                        color: context
+                                            .colorScheme
+                                            .onSurfaceVariant
+                                            .withValues(alpha: 0.7),
                                       ),
                                     ),
                                   ],
@@ -445,7 +473,9 @@ class AppSidebarContainer extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(12),
                             boxShadow: [
                               BoxShadow(
-                                color: const Color(0xFF06B6D4).withValues(alpha: 0.35),
+                                color: const Color(
+                                  0xFF06B6D4,
+                                ).withValues(alpha: 0.35),
                                 blurRadius: 10,
                                 offset: const Offset(0, 3),
                               ),
@@ -477,12 +507,21 @@ class AppSidebarContainer extends ConsumerWidget {
                       Container(
                         width: 186,
                         margin: const EdgeInsets.only(bottom: 12),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
-                          color: isDark ? Colors.white.withValues(alpha: 0.04) : Colors.black.withValues(alpha: 0.03),
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.04)
+                              : Colors.black.withValues(alpha: 0.03),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: isDark ? const Color(0xFF1E293B) : context.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                            color: isDark
+                                ? const Color(0xFF1E293B)
+                                : context.colorScheme.outlineVariant.withValues(
+                                    alpha: 0.3,
+                                  ),
                           ),
                         ),
                         child: Row(
@@ -494,21 +533,31 @@ class AppSidebarContainer extends ConsumerWidget {
                                 shape: BoxShape.circle,
                                 color: Color(0xFF10B981),
                                 boxShadow: [
-                                  BoxShadow(color: Color(0xFF10B981), blurRadius: 6),
+                                  BoxShadow(
+                                    color: Color(0xFF10B981),
+                                    blurRadius: 6,
+                                  ),
                                 ],
                               ),
                             ),
                             const SizedBox(width: 8),
                             const Text(
                               'Mihomo Meta',
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             const Spacer(),
                             InkWell(
                               onTap: () {
-                                ref.read(appSettingProvider.notifier).update(
-                                  (state) => state.copyWith(showLabel: !state.showLabel),
-                                );
+                                ref
+                                    .read(appSettingProvider.notifier)
+                                    .update(
+                                      (state) => state.copyWith(
+                                        showLabel: !state.showLabel,
+                                      ),
+                                    );
                               },
                               borderRadius: BorderRadius.circular(6),
                               child: Padding(
@@ -527,9 +576,12 @@ class AppSidebarContainer extends ConsumerWidget {
                       IconButton(
                         tooltip: context.appLocalizations.toggleLabel,
                         onPressed: () {
-                          ref.read(appSettingProvider.notifier).update(
-                            (state) => state.copyWith(showLabel: !state.showLabel),
-                          );
+                          ref
+                              .read(appSettingProvider.notifier)
+                              .update(
+                                (state) =>
+                                    state.copyWith(showLabel: !state.showLabel),
+                              );
                         },
                         icon: Icon(
                           Icons.menu,

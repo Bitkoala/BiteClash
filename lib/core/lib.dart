@@ -160,5 +160,4 @@ class CoreLib extends CoreHandlerInterface {
   }
 }
 
-CoreLib? get coreLib =>
-    (system.isAndroid || system.isIOS) ? CoreLib() : null;
+CoreLib? get coreLib => (system.isAndroid || system.isIOS) ? CoreLib() : null;

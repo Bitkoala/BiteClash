@@ -93,12 +93,18 @@ class _HomeShell extends ConsumerWidget {
                 border: Border.all(
                   color: Theme.of(context).brightness == Brightness.dark
                       ? const Color(0xFF1E293B)
-                      : context.colorScheme.outlineVariant.withValues(alpha: 0.3),
+                      : context.colorScheme.outlineVariant.withValues(
+                          alpha: 0.3,
+                        ),
                   width: 1.2,
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: Theme.of(context).brightness == Brightness.dark ? 0.4 : 0.08),
+                    color: Colors.black.withValues(
+                      alpha: Theme.of(context).brightness == Brightness.dark
+                          ? 0.4
+                          : 0.08,
+                    ),
                     blurRadius: 16,
                     offset: const Offset(0, 4),
                   ),
@@ -114,7 +120,8 @@ class _HomeShell extends ConsumerWidget {
                         final item = navigationItems[i];
                         final isSelected = i == state.currentIndex;
                         final primary = context.colorScheme.primary;
-                        final isDark = Theme.of(context).brightness == Brightness.dark;
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
 
                         return Material(
                           color: Colors.transparent,
@@ -124,10 +131,15 @@ class _HomeShell extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(16),
                             child: AnimatedContainer(
                               duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 8,
+                              ),
                               decoration: BoxDecoration(
                                 color: isSelected
-                                    ? primary.withValues(alpha: isDark ? 0.22 : 0.15)
+                                    ? primary.withValues(
+                                        alpha: isDark ? 0.22 : 0.15,
+                                      )
                                     : Colors.transparent,
                                 borderRadius: BorderRadius.circular(16),
                                 border: Border.all(
@@ -142,7 +154,11 @@ class _HomeShell extends ConsumerWidget {
                                 children: [
                                   IconTheme(
                                     data: IconThemeData(
-                                      color: isSelected ? primary : context.colorScheme.onSurfaceVariant,
+                                      color: isSelected
+                                          ? primary
+                                          : context
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                       size: 20,
                                     ),
                                     child: item.icon,
@@ -152,8 +168,14 @@ class _HomeShell extends ConsumerWidget {
                                     item.label.label,
                                     style: TextStyle(
                                       fontSize: 11,
-                                      fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                                      color: isSelected ? (isDark ? Colors.white : primary) : context.colorScheme.onSurfaceVariant,
+                                      fontWeight: isSelected
+                                          ? FontWeight.bold
+                                          : FontWeight.w500,
+                                      color: isSelected
+                                          ? (isDark ? Colors.white : primary)
+                                          : context
+                                                .colorScheme
+                                                .onSurfaceVariant,
                                     ),
                                   ),
                                 ],
@@ -316,7 +338,6 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
     );
   }
 }
-
 
 class HomeBackScopeContainer extends ConsumerWidget {
   final Widget child;
