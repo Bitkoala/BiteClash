@@ -10,7 +10,8 @@ import 'package:fl_clash/widgets/scaffold.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'rules.dart';
+import 'package:fl_clash/views/config/remote_controller.dart';
+import 'package:fl_clash/views/config/rules.dart';
 
 class AdvancedConfigView extends StatelessWidget {
   const AdvancedConfigView({super.key});
@@ -19,6 +20,13 @@ class AdvancedConfigView extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocalizations = context.appLocalizations;
     final List<Widget> items = [
+      ListItem.open(
+        title: const Text('远程核心托管 (Remote Core)'),
+        subtitle: const Text('托管 OpenWrt 软路由、NAS 旁路由或远程核心'),
+        leading: const Icon(Icons.hub_rounded),
+        widget: const RemoteControllerView(),
+        blur: false,
+      ),
       ListItem.open(
         title: Text(appLocalizations.network),
         subtitle: Text(appLocalizations.networkDesc),
