@@ -163,6 +163,8 @@ jobs:
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-disabled: true
 
       - name: Run Android unit tests
         working-directory: android
@@ -177,6 +179,7 @@ jobs:
           test -d "$wrapper" || flutter precache
           cp -R "$wrapper/." .
           chmod +x gradlew
+          rm -rf ~/.gradle/caches/*/transforms 2>/dev/null || true
           # `:core` only calls System.loadLibrary; the excluded Flutter tasks would run
           # the native build hooks for every debug ABI, which no JVM unit test consumes.
           ./gradlew :common:testDebugUnitTest :service:testDebugUnitTest :app:testDebugUnitTest \
@@ -297,6 +300,8 @@ jobs:
       - name: Setup Gradle
         if: startsWith(matrix.platform,'android')
         uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-disabled: true
 
       - name: Enable git long paths (Windows)
         if: startsWith(matrix.os, 'windows')
