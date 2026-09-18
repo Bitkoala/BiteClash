@@ -86,7 +86,7 @@ class SidebarNav extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Antigravity',
+                      'BiteClash',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -95,7 +95,7 @@ class SidebarNav extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      'Universal Proxy',
+                      'Lightweight & Fast',
                       style: TextStyle(
                         fontSize: 11,
                         color: AppTheme.textMuted,

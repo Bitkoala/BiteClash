@@ -7,18 +7,18 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(
     const ProviderScope(
-      child: AntigravityProxyApp(),
+      child: BiteClashApp(),
     ),
   );
 }
 
-class AntigravityProxyApp extends StatelessWidget {
-  const AntigravityProxyApp({super.key});
+class BiteClashApp extends StatelessWidget {
+  const BiteClashApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Antigravity Proxy',
+      title: 'BiteClash',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.darkTheme,
       home: const MainScaffold(),

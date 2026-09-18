@@ -109,7 +109,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 children: [
                   _buildSettingItem(
                     title: '客户端版本',
-                    subtitle: 'Universal Flutter Cross-Platform Client',
+                    subtitle: 'BiteClash Universal Client',
                     trailing: 'v1.0.0-beta',
                   ),
                   const Divider(color: AppTheme.borderLight, height: 28),
