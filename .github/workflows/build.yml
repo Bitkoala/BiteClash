@@ -1,0 +1,149 @@
+name: Build & Release All-Platform Client
+
+on:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  # -----------------------------------------------------------
+  # 1. 编译 Windows 桌面原生端 (.exe + 绿色完整包 .zip)
+  # -----------------------------------------------------------
+  build-windows:
+    name: Build Windows Desktop
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Windows Desktop Support
+        run: flutter config --enable-windows-desktop
+
+      - name: Ensure Mihomo Core Binary
+        shell: pwsh
+        run: |
+          if (!(Test-Path "core/windows/mihomo.exe")) {
+            New-Item -ItemType Directory -Force -Path "core/windows"
+            $url = "https://github.com/MetaCubeX/mihomo/releases/download/v1.19.31/mihomo-windows-amd64-v1.19.31.zip"
+            curl.exe -L -o "core/windows/mihomo.zip" $url
+            tar.exe -xf "core/windows/mihomo.zip" -C "core/windows"
+            Get-ChildItem "core/windows" -Filter "*.exe" | Rename-Item -NewName "mihomo.exe" -Force
+            Remove-Item "core/windows/mihomo.zip" -ErrorAction SilentlyContinue
+          }
+
+      - name: Install Dependencies
+        working-directory: app
+        run: flutter pub get
+
+      - name: Compile Windows Release
+        working-directory: app
+        run: flutter build windows --release
+
+      - name: Package Windows Bundle
+        shell: pwsh
+        run: |
+          $distDir = "Antigravity-Proxy-windows-x64"
+          New-Item -ItemType Directory -Force -Path "$distDir/core/windows", "$distDir/core/configs"
+          
+          # 复制 Flutter 编译产物
+          Copy-Item -Path "app/build/windows/x64/runner/Release/*" -Destination $distDir -Recurse
+          
+          # 注入 Mihomo 内核与默认配置
+          Copy-Item -Path "core/windows/mihomo.exe" -Destination "$distDir/core/windows/"
+          Copy-Item -Path "core/configs/default_config.yaml" -Destination "$distDir/core/configs/"
+          
+          # 打包为 zip
+          Compress-Archive -Path "$distDir/*" -DestinationPath "Antigravity-Proxy-windows-x64.zip" -Force
+
+      - name: Upload Windows Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Antigravity-Proxy-windows-x64
+          path: Antigravity-Proxy-windows-x64.zip
+
+  # -----------------------------------------------------------
+  # 2. 编译 Android 安装包 (.apk)
+  # -----------------------------------------------------------
+  build-android:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Install Dependencies
+        working-directory: app
+        run: flutter pub get
+
+      - name: Build APK
+        working-directory: app
+        run: flutter build apk --release
+
+      - name: Prepare APK Output
+        run: |
+          cp app/build/app/outputs/flutter-apk/app-release.apk Antigravity-Proxy-android.apk
+
+      - name: Upload Android Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Antigravity-Proxy-android
+          path: Antigravity-Proxy-android.apk
+
+  # -----------------------------------------------------------
+  # 3. 自动发布至 GitHub Releases (打标签或手动触发时)
+  # -----------------------------------------------------------
+  release:
+    name: Publish GitHub Release
+    needs: [build-windows, build-android]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+
+    steps:
+      - name: Download Windows Bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: Antigravity-Proxy-windows-x64
+
+      - name: Download Android APK
+        uses: actions/download-artifact@v4
+        with:
+          name: Antigravity-Proxy-android
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name || 'latest-build' }}
+          name: Release ${{ github.ref_name || 'Latest Build' }}
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+          files: |
+            Antigravity-Proxy-windows-x64.zip
+            Antigravity-Proxy-android.apk

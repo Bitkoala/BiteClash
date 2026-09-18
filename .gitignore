@@ -1,0 +1,29 @@
+# Flutter / Dart
+**/build/
+**/.dart_tool/
+**/.flutter-plugins
+**/.flutter-plugins-dependencies
+**/.packages
+**/pubspec.lock
+
+# Windows
+**/ephemeral/
+*.vcxproj
+*.vcxproj.filters
+*.sln
+
+# Android
+**/android/.gradle/
+**/android/local.properties
+**/android/app/build/
+
+# iOS
+**/ios/.symlinks/
+**/ios/Pods/
+**/ios/Podfile.lock
+
+# IDE & Logs
+.idea/
+.vscode/
+*.log
+test.bin
