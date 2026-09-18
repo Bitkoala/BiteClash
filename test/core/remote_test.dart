@@ -59,11 +59,7 @@ void main() {
         if (method == 'GET') {
           await sendJson(request, {
             'proxies': {
-              'GLOBAL': {
-                'name': 'GLOBAL',
-                'type': 'Selector',
-                'now': 'DIRECT',
-              },
+              'GLOBAL': {'name': 'GLOBAL', 'type': 'Selector', 'now': 'DIRECT'},
               'DIRECT': {'name': 'DIRECT', 'type': 'Direct'},
             },
             'all': ['GLOBAL', 'DIRECT'],
