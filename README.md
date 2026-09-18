@@ -1,135 +1,122 @@
-<div>
+<div align="center">
 
-[**简体中文**](README_zh_CN.md)
+# ⚡ BiteClash
+
+[**简体中文**](README_zh_CN.md) | [**English**](README.md)
+
+[![Release](https://img.shields.io/github/v/release/Bitkoala/BiteClash?style=flat-square&color=00D2FF&logo=github)](https://github.com/Bitkoala/BiteClash/releases)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/Bitkoala/BiteClash/build.yaml?style=flat-square&logo=githubactions)](https://github.com/Bitkoala/BiteClash/actions)
+[![Downloads](https://img.shields.io/github/downloads/Bitkoala/BiteClash/total?style=flat-square&color=39FF14&logo=github)](https://github.com/Bitkoala/BiteClash/releases)
+[![License](https://img.shields.io/github/license/Bitkoala/BiteClash?style=flat-square&color=white)](LICENSE)
+
+**A next-generation, cyberpunk-styled multi-platform proxy client powered by Mihomo (Clash.Meta).**  
+Fast, beautiful, feature-complete, completely open-source, and free of ads.
 
 </div>
 
-## FlClash
+---
 
-[![Downloads](https://img.shields.io/github/downloads/chen08209/FlClash/total?style=flat-square&logo=github)](https://github.com/chen08209/FlClash/releases/)[![Last Version](https://img.shields.io/github/release/chen08209/FlClash/all.svg?style=flat-square)](https://github.com/chen08209/FlClash/releases/)[![License](https://img.shields.io/github/license/chen08209/FlClash?style=flat-square)](LICENSE)
+## 🌟 Highlights
 
-[![Channel](https://img.shields.io/badge/Telegram-Channel-blue?style=flat-square&logo=telegram)](https://t.me/FlClash)
+- 🛸 **Cyberpunk Aesthetic Overhaul**: Tailored dark glassmorphic UI, glowing reactor core start button, floating mobile capsule navigation bar, and desktop floating sidebar.
+- 🌐 **True All-Platform Coverage**:
+  - **Windows**: Modern UI, native Windows system tray, background daemon, helper service for TUN mode.
+  - **Android**: Material You & edge-to-edge support, per-app proxying, quick settings tile.
+  - **iOS**: Full NetworkExtension integration (`NEPacketTunnelProvider`), shared App Group IPC, sideloadable `.ipa` and TrollStore `.tipa` releases.
+  - **macOS**: Universal binaries (Apple Silicon arm64 & Intel x64), status bar icon.
+  - **Linux**: AppImage, Deb, and RPM packages with systemd integration.
+- ⚡ **Clash Verge Rev Functional Parity**:
+  - **Connection Tracker**: Real-time traffic, proxy chains, source/destination IP, rule matching, and connection closing.
+  - **Live Log Terminal**: Real-time log streaming with multi-level filtering (Debug, Info, Warning, Error), pause, and search.
+  - **Node Management**: Quick latency tests, keyword search, flexible sorting (by delay, name, or protocol), and group views.
+  - **Auto-Start & Tray**: Automatic launch on boot, minimize-to-tray, and global shortcut toggles.
+- ☁️ **Sync & Backup**: Remote WebDAV subscription and configuration backup & restore.
+- 🛡️ **Zero Telemetry**: No trackers, no telemetry, no advertisements.
 
-A multi-platform proxy client based on ClashMeta, simple and easy to use, open-source and ad-free.
+---
 
-<p align="center">
-    <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="snapshots/preview-dark.png">
-        <img alt="FlClash on desktop and mobile" src="snapshots/preview.png" width="90%">
-    </picture>
-</p>
+## 📦 Downloads
 
-## Features
+Grab the latest pre-compiled binaries from [GitHub Releases](https://github.com/Bitkoala/BiteClash/releases/latest):
 
-✈️ Multi-platform: Android, Windows, macOS and Linux
+| Platform | Format | Description |
+| :--- | :--- | :--- |
+| **Windows** | `.exe` / `.zip` | Setup installer and portable ZIP (x64 / arm64) |
+| **Android** | `.apk` | Universal APK and ABI-split APKs (arm64-v8a, armeabi-v7a, x86_64) |
+| **iOS** | `.ipa` / `.tipa` | Sideloadable IPA (AltStore, SideStore) & TrollStore TIPA |
+| **macOS** | `.dmg` | Disk image for Apple Silicon & Intel Macs |
+| **Linux** | `.AppImage` / `.deb` / `.rpm` | Portable AppImage and distro package installers |
 
-💻 Adaptive multiple screen sizes, Multiple color themes available
+---
 
-💡 Based on Material You Design, [Surfboard](https://github.com/getsurfboard/surfboard)-like UI
+## 🛠️ Architecture
 
-☁️ Supports data sync via WebDAV
+BiteClash separates user interaction from high-throughput network routing through a robust layered design:
 
-✨ Support subscription link, Dark mode
-
-## Use
-
-### Linux
-
-⚠️ Make sure to install the following dependencies before using them
-
-   ```bash
-    sudo apt-get install libayatana-appindicator3-dev
-   ```
-
-### Android
-
-Support the following actions
-
-   ```bash
-    com.follow.clash.action.START
-    
-    com.follow.clash.action.STOP
-    
-    com.follow.clash.action.TOGGLE
-   ```
-
-## Download
-
-<a href="https://chen08209.github.io/FlClash-fdroid-repo/repo?fingerprint=789D6D32668712EF7672F9E58DEEB15FBD6DCEEC5AE7A4371EA72F2AAE8A12FD"><img alt="Get it on F-Droid" src="snapshots/get-it-on-fdroid.svg" width="200px"/></a> <a href="https://github.com/chen08209/FlClash/releases"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" width="200px"/></a>
-
-### Homebrew
-
-```bash
-brew tap chen08209/tap
-brew install --cask flclash
+```
+┌────────────────────────────────────────────────────────┐
+│             BiteClash Flutter UI Layer                 │
+│      (Cyberpunk Dock, Reactive Dashboard, Charts)      │
+└──────────────┬──────────────────────────┬──────────────┘
+               │                          │
+   [MethodChannel / IPC]      [Named Pipes / Unix Socket]
+               │                          │
+┌──────────────▼──────────────┐┌──────────▼──────────────┐
+│       Platform Driver       ││       Mihomo Core       │
+│  - Windows Service Helper   ││  - Clash.Meta Engine    │
+│  - Android VpnService       ││  - Mixed/Fake-IP Stack  │
+│  - iOS PacketTunnelProvider ││  - Rules & External Prov│
+└─────────────────────────────┘└─────────────────────────┘
 ```
 
-## Build
+---
 
-1. Update submodules
+## 🚀 Building from Source
+
+### Prerequisites
+
+- [Flutter SDK](https://flutter.dev/) (3.24+)
+- [Go SDK](https://go.dev/) (1.21+)
+- Git with submodule support
+
+### Steps
+
+1. **Clone the repository and submodules**:
    ```bash
-   git submodule update --init --recursive
+   git clone --recursive https://github.com/Bitkoala/BiteClash.git
+   cd BiteClash
    ```
 
-2. Install `Flutter` and `Golang` environment
+2. **Fetch Flutter packages**:
+   ```bash
+   flutter pub get
+   ```
 
-3. Build Application
+3. **Build by platform**:
 
-    - android
+   - **Windows**:
+     ```bash
+     dart setup.dart windows
+     ```
+   - **Android**:
+     ```bash
+     dart setup.dart android
+     ```
+   - **iOS (Unsigned / Sideload)**:
+     ```bash
+     flutter build ios --release --no-codesign
+     ```
+   - **macOS**:
+     ```bash
+     dart setup.dart macos
+     ```
+   - **Linux**:
+     ```bash
+     dart setup.dart linux
+     ```
 
-        1. Install `Android SDK`, `Android NDK`
+---
 
-        2. Set `ANDROID_NDK` environment variable
+## 📄 License
 
-        3. Run build script
-
-           ```bash
-           dart setup.dart android
-           ```
-
-    - windows
-
-        1. Requires a Windows client
-
-        2. Install `GCC`, `Inno Setup`
-
-        3. Run build script
-
-           ```bash
-           dart setup.dart windows
-           ```
-
-    - linux
-
-        1. Requires a Linux client
-
-        2. Dependencies are auto-installed by setup script, or manually:
-           ```bash
-           sudo apt-get install -y libayatana-appindicator3-dev
-           ```
-
-        3. Run build script
-
-           ```bash
-           dart setup.dart linux
-           ```
-
-    - macOS
-
-        1. Requires a macOS client
-
-        2. Run build script
-
-           ```bash
-           dart setup.dart macos
-           ```
-
-## Star
-
-The easiest way to support developers is to click on the star (⭐) at the top of the page.
-
-<p style="text-align: center;">
-    <a href="https://api.star-history.com/svg?repos=chen08209/FlClash&Date">
-        <img alt="start" width=50% src="https://api.star-history.com/svg?repos=chen08209/FlClash&Date"/>
-    </a>
-</p>
+This project is open source under the [GPL-3.0 License](LICENSE).
