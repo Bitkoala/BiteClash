@@ -28,13 +28,14 @@
 - ⚡ **全场景超级网络枢纽 (All-Scenario Super Network Hub)**:
   - 🎮 **双核心运行模式**: 支持“本地独立代理 (Local Core)”与“远程接管中枢 (Remote Hub)”，随身手机/电脑既是独立代理节点，也是全屋软路由与 NAS 的超级遥控器。
   - 🐳 **BiteClash Gateway (Docker 容器版 / 旁路由模式)**: 专为群晖 (Synology)、unRAID、TrueNAS、PVE、树莓派打造，全自动 `nftables` 透明网关 + Fake-IP DNS 劫持，Apple TV / Switch / PS5 零配置无感加速。
-  - 📶 **BiteClash for OpenWrt (原生 .ipk 插件)**: 抛弃脆弱易崩溃的 LuCI 插件依赖，采用极简原生的 Linux procd 守护进程与高并发 TProxy 重定向。
-  - 🌐 **赛博朋克 Web 控制台**: 统一的极速轻量网页仪表盘，内嵌于网关与软路由端口 `9091`，支持任意终端浏览器秒级监控与切换。
-- ⚡ **深度对标 Clash Verge Rev 实用功能**:
-  - **实时连接追踪**: 查看当前活跃流量、代理链跳板、源/目的 IP、命中规则，支持一键中断连接。
-  - **实时日志终端**: 支持 Debug、Info、Warning、Error 多等级实时滚动过滤，暂停查看与关键词检索。
-  - **智能节点管理**: 批量延迟测速、搜索过滤、多种排序模式（延迟排序、名称排序、协议排序）。
-  - **系统级集成**: 开机自动启动、最小化到托盘、全局快捷键一键启停。
+  - 📶 **BiteClash for OpenWrt (原生 .ipk 插件)**: 抛弃脆弱易崩溃的传统依赖，采用极简原生的 Linux procd 守护进程与高性能 TProxy 透明重定向。
+  - 🌐 **赛博朋克 Web 控制台**: 统一的极速轻量网页仪表盘，内嵌于网关与软路由端口 `9091`，支持任意终端浏览器秒级监控与节点切换。
+- 🛠️ **专业级网络诊断与控制套件 (Professional Network Suite)**:
+  - **实时连接追踪**: 实时洞察设备活跃连接、流经跳板、数据吞吐、命中规则，支持一键中断指定或全部连接。
+  - **流式日志终端**: 支持 Debug、Info、Warning、Error 多等级实时滚动过滤，暂停查看与关键词检索。
+  - **智能节点矩阵**: 批量并发延迟测速、搜索过滤、多种排序模式（延迟排序、名称排序、协议排序）。
+  - **系统原生深度集成**: 开机自动启动、系统托盘常驻控制、全局热键一键启停。
+- 🔮 **现代协议栈全覆盖**: 全面支持 Shadowsocks(R)、VMess、VLESS、Trojan、Hysteria 2、WireGuard、TUIC 等新一代高并发传输协议。
 - ☁️ **云端备份同步**: 支持通过 WebDAV 协议远程备份与恢复订阅节点及个性化配置。
 - 🛡️ **纯粹安全隐私**: 零数据收集、零追踪统计、无任何商业广告代码。
 
@@ -56,25 +57,62 @@
 
 ---
 
-## 🛠️ 系统架构
+## 🛠️ 全场景系统架构
 
-BiteClash 采用模块化解耦设计，前端高颜值响应式 UI 与后端高性能网络内核通过安全 IPC 通信：
+BiteClash 采用表现层与执行层彻底解耦的模块化架构，兼具终端独立加速与局域网全屋网关接管能力：
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│             BiteClash Flutter UI 交互层                │
-│    (赛博朋克控制台、悬浮交互舱、实时速率监视仪表盘)    │
-└──────────────┬──────────────────────────┬──────────────┘
-               │                          │
-      [MethodChannel / IPC]        [命名管道 / Unix 套接字]
-               │                          │
-┌──────────────▼──────────────┐┌──────────▼──────────────┐
-│        平台底层驱动         ││        Mihomo 核心      │
-│  - Windows Helper 辅助服务  ││  - Clash.Meta 转发引擎  │
-│  - Android VpnService 驱动  ││  - Mixed/Fake-IP 协议栈 │
-│  - iOS PacketTunnelProvider ││  - 规则分流 / 外部提供商│
-└─────────────────────────────┘└─────────────────────────┘
+│           BiteClash 全平台原生客户端 (App)             │
+│   (iOS / Android / macOS / Windows / Linux)            │
+│   ├── 本地随身代理模式 (Local Core)                    │
+│   └── 局域网超级遥控器模式 (Remote Hub)                │
+└──────────────────────────┬─────────────────────────────┘
+                           │ 统一网络调度 (REST API / WebSocket: 9090)
+┌──────────────────────────▼─────────────────────────────┐
+│       全场景网关基础设施 (BiteClash Network Hub)        │
+│   ├── Docker 旁路由容器 (群晖 / unRAID / TrueNAS / PVE)│
+│   ├── OpenWrt / ImmortalWrt 原生软路由插件 (.ipk)      │
+│   └── 赛博朋克 Web 控制台 (任意浏览器直连 9091)         │
+└──────────────────────────┬─────────────────────────────┘
+                           │ nftables TProxy + Fake-IP (1053) 全自动接管
+┌──────────────────────────▼─────────────────────────────┐
+│   全屋无感加速设备: Apple TV / Switch / PS5 / 智能家居  │
+└────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## ⚡ 快速上手
+
+### 1. 原生客户端随身模式
+1. 从 [Releases](https://github.com/Bitkoala/BiteClash/releases/latest) 下载并安装对应平台的 BiteClash；
+2. 进入【配置】页面，点击右下角【+】号，支持通过**订阅链接拉取**、**本地文件导入**或**剪贴板导入**；
+3. 返回主仪表盘，点击中心“赛博能量反应堆”启动代理，即可开始高速出海。
+
+### 2. Docker 旁路由模式 (NAS / 服务器)
+```bash
+# 开启宿主机 IPv4 转发
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# 一键启动 BiteClash Gateway
+git clone https://github.com/Bitkoala/BiteClash.git
+cd BiteClash/gateway
+docker compose up -d
+```
+- 浏览器访问 `http://<宿主机IP>:9091` 打开赛博朋克 Web 控制台；
+- 或在手机/电脑 BiteClash App 的【设置】->【网络与核心】->【核心运行模式】中填入宿主机 IP，直接变身全屋遥控器。
+
+### 3. OpenWrt 软路由模式
+```bash
+# 安装原生包
+opkg install biteclash_1.0.0-1_*.ipk
+
+# 启用并启动服务
+uci set biteclash.main.enabled=1 && uci commit biteclash
+/etc/init.d/biteclash start
+```
+路由器即刻接管全屋 DNS 与出海流量，并开放 `http://192.168.1.1:9091` 控制面板。
 
 ---
 

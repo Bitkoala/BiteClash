@@ -28,13 +28,14 @@ Fast, beautiful, feature-complete, completely open-source, and free of ads.
 - ⚡ **All-Scenario Super Network Hub**:
   - 🎮 **Dual Core Mode**: Choose between "Local Core" (standalone client proxy) and "Remote Hub" (remote controller mode). Your phone and PC act as instant remote controls for whole-home OpenWrt routers and NAS setups.
   - 🐳 **BiteClash Gateway (Docker Container / Side-Router)**: Zero-client transparent proxy gateway tailored for Synology, unRAID, TrueNAS, PVE, and Raspberry Pi with automated `nftables` TProxy & Fake-IP DNS interception.
-  - 📶 **BiteClash for OpenWrt (Native .ipk Package)**: Pure and lightweight Linux procd daemon with transparent nftables redirection without unstable LuCI crashes.
+  - 📶 **BiteClash for OpenWrt (Native .ipk Package)**: Pure and lightweight Linux procd daemon with high-throughput nftables transparent redirection.
   - 🌐 **Cyberpunk Web Console**: Embedded web management dashboard on port `9091` for instant browser access from any device.
-- ⚡ **Clash Verge Rev Functional Parity**:
-  - **Connection Tracker**: Real-time traffic, proxy chains, source/destination IP, rule matching, and connection closing.
-  - **Live Log Terminal**: Real-time log streaming with multi-level filtering (Debug, Info, Warning, Error), pause, and search.
-  - **Node Management**: Quick latency tests, keyword search, flexible sorting (by delay, name, or protocol), and group views.
-  - **Auto-Start & Tray**: Automatic launch on boot, minimize-to-tray, and global shortcut toggles.
+- 🛠️ **Professional Network Suite**:
+  - **Live Connection Tracker**: Real-time inspection of active connections, outbound chains, IP resolution, and transfer speeds with one-click closing.
+  - **Streaming Log Terminal**: Real-time log streaming with multi-level filtering (Debug, Info, Warning, Error), pause, and search.
+  - **Smart Node Matrix**: Concurrent batch latency testing, keyword filtering, and multi-mode sorting (by delay, name, or protocol).
+  - **Deep System Integration**: Native autostart on boot, system tray menu controls, and global hotkey shortcuts.
+- 🔮 **Next-Gen Protocol Stack**: Full out-of-the-box support for Shadowsocks(R), VMess, VLESS, Trojan, Hysteria 2, WireGuard, and TUIC.
 - ☁️ **Sync & Backup**: Remote WebDAV subscription and configuration backup & restore.
 - 🛡️ **Zero Telemetry**: No trackers, no telemetry, no advertisements.
 
@@ -56,25 +57,62 @@ Grab the latest pre-compiled binaries from [GitHub Releases](https://github.com/
 
 ---
 
-## 🛠️ Architecture
+## 🛠️ System Architecture
 
-BiteClash separates user interaction from high-throughput network routing through a robust layered design:
+BiteClash features a modular design that completely decouples presentation from routing execution, enabling both standalone device proxying and whole-home gateway interception:
 
 ```
 ┌────────────────────────────────────────────────────────┐
-│             BiteClash Flutter UI Layer                 │
-│      (Cyberpunk Dock, Reactive Dashboard, Charts)      │
-└──────────────┬──────────────────────────┬──────────────┘
-               │                          │
-   [MethodChannel / IPC]      [Named Pipes / Unix Socket]
-               │                          │
-┌──────────────▼──────────────┐┌──────────▼──────────────┐
-│       Platform Driver       ││       Mihomo Core       │
-│  - Windows Service Helper   ││  - Clash.Meta Engine    │
-│  - Android VpnService       ││  - Mixed/Fake-IP Stack  │
-│  - iOS PacketTunnelProvider ││  - Rules & External Prov│
-└─────────────────────────────┘└─────────────────────────┘
+│             BiteClash Native Client App                │
+│   (iOS / Android / macOS / Windows / Linux)            │
+│   ├── Standalone Client Mode (Local Core)              │
+│   └── Super Remote Controller Mode (Remote Hub)        │
+└──────────────────────────┬─────────────────────────────┘
+                           │ Unified Dispatch (REST API / WebSocket: 9090)
+┌──────────────────────────▼─────────────────────────────┐
+│          BiteClash Network Hub Infrastructure          │
+│   ├── Docker Gateway Container (Synology / unRAID/ PVE)│
+│   ├── OpenWrt / ImmortalWrt Native Package (.ipk)      │
+│   └── Cyberpunk Web Console (Direct Browser Access)    │
+└──────────────────────────┬─────────────────────────────┘
+                           │ Automated nftables TProxy + Fake-IP (1053)
+┌──────────────────────────▼─────────────────────────────┐
+│ Whole-Home Devices: Apple TV / Switch / PS5 / Smart Hub│
+└────────────────────────────────────────────────────────┘
 ```
+
+---
+
+## ⚡ Quick Start
+
+### 1. Native Client Mode (Mobile & Desktop)
+1. Download BiteClash for your OS from [Releases](https://github.com/Bitkoala/BiteClash/releases/latest);
+2. Go to the **Config** tab and click **+** to import via subscription URL, local YAML file, or clipboard;
+3. Return to the dashboard and press the glowing energy reactor to start proxying.
+
+### 2. Docker Side-Router Gateway (NAS / Servers)
+```bash
+# Enable IPv4 forwarding on host
+sudo sysctl -w net.ipv4.ip_forward=1
+
+# Clone and run BiteClash Gateway
+git clone https://github.com/Bitkoala/BiteClash.git
+cd BiteClash/gateway
+docker compose up -d
+```
+- Open `http://<HOST_IP>:9091` in any browser to open the Web Console;
+- Or open BiteClash App on your phone/PC -> **Settings** -> **Network & Core** -> **Core Mode** and connect directly to the gateway IP.
+
+### 3. OpenWrt Router Mode
+```bash
+# Install native .ipk package
+opkg install biteclash_1.0.0-1_*.ipk
+
+# Enable and start service
+uci set biteclash.main.enabled=1 && uci commit biteclash
+/etc/init.d/biteclash start
+```
+The router will instantly intercept DNS and outbound traffic with transparent TProxy acceleration.
 
 ---
 
