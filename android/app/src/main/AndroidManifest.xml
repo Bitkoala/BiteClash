@@ -63,6 +63,7 @@
 
                 <data android:scheme="clash" />
                 <data android:scheme="clashmeta" />
+                <data android:scheme="biteclash" />
                 <data android:scheme="flclash" />
 
                 <data android:host="install-config" />

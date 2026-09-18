@@ -10,19 +10,6 @@ import 'package:fl_clash/widgets/scaffold.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-@immutable
-class Contributor {
-  final String avatar;
-  final String name;
-  final String link;
-
-  const Contributor({
-    required this.avatar,
-    required this.name,
-    required this.link,
-  });
-}
-
 class AboutView extends ConsumerWidget {
   const AboutView({super.key});
 
@@ -48,13 +35,6 @@ class AboutView extends ConsumerWidget {
           },
         ),
         ListItem(
-          title: const Text('Telegram'),
-          onTap: () {
-            dialogs.openUrl('https://t.me/FlClash');
-          },
-          trailing: const Icon(Icons.launch),
-        ),
-        ListItem(
           title: Text(appLocalizations.project),
           onTap: () {
             dialogs.openUrl('https://github.com/$repository');
@@ -67,39 +47,6 @@ class AboutView extends ConsumerWidget {
             dialogs.openUrl('https://github.com/MetaCubeX/mihomo');
           },
           trailing: const Icon(Icons.launch),
-        ),
-      ],
-    );
-  }
-
-  List<Widget> _buildContributorsSection(AppLocalizations appLocalizations) {
-    const contributors = [
-      Contributor(
-        avatar: 'assets/images/avatar/june2.jpg',
-        name: 'June2',
-        link: 'https://t.me/Jibadong',
-      ),
-      Contributor(
-        avatar: 'assets/images/avatar/arue.jpg',
-        name: 'Arue',
-        link: 'https://t.me/xrcm6868',
-      ),
-    ];
-    return generateSection(
-      separated: false,
-      title: appLocalizations.otherContributors,
-      items: [
-        ListItem(
-          title: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Wrap(
-              spacing: 24,
-              children: [
-                for (final contributor in contributors)
-                  Avatar(contributor: contributor),
-              ],
-            ),
-          ),
         ),
       ],
     );
@@ -164,7 +111,6 @@ class AboutView extends ConsumerWidget {
         ),
       ),
       const SizedBox(height: 12),
-      ..._buildContributorsSection(appLocalizations),
       ..._buildMoreSection(context, ref),
     ];
     return BaseScaffold(
@@ -172,31 +118,6 @@ class AboutView extends ConsumerWidget {
       body: Padding(
         padding: kMaterialListPadding.copyWith(top: 16, bottom: 16),
         child: generateListView(items),
-      ),
-    );
-  }
-}
-
-class Avatar extends StatelessWidget {
-  final Contributor contributor;
-
-  const Avatar({super.key, required this.contributor});
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Column(
-        children: [
-          SizedBox(
-            width: 36,
-            height: 36,
-            child: CircleAvatar(
-              foregroundImage: AssetImage(contributor.avatar),
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(contributor.name, style: context.textTheme.bodySmall),
-        ],
       ),
     );
   }

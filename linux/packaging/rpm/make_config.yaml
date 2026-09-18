@@ -1,7 +1,7 @@
-display_name: FlClash
+display_name: BiteClash
 
-packager: chen08209
-packagerEmail: chen08209@gmail.com
+packager: Bitkoala
+packagerEmail: contact@biteclash.com
 license: Other
 
 priority: optional
@@ -33,15 +33,16 @@ postuninstall_scripts:
 supported_mime_type:
   - x-scheme-handler/clash
   - x-scheme-handler/clashmeta
+  - x-scheme-handler/biteclash
   - x-scheme-handler/flclash
 
 keywords:
-  - FlClash
+  - BiteClash
   - Clash
   - ClashMeta
   - Proxy
 
-generic_name: FlClash
+generic_name: BiteClash
 
 group: Applications/Internet
 
