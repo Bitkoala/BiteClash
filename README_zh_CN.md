@@ -2,7 +2,7 @@
 
 # ⚡ BiteClash
 
-[**简体中文**](README_zh_CN.md) | [**English**](README.md)
+[**简体中文**](README.md) | [**English**](README_en.md)
 
 [![Release](https://img.shields.io/github/v/release/Bitkoala/BiteClash?style=flat-square&color=00D2FF&logo=github)](https://github.com/Bitkoala/BiteClash/releases)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/Bitkoala/BiteClash/build.yaml?style=flat-square&logo=githubactions)](https://github.com/Bitkoala/BiteClash/actions)

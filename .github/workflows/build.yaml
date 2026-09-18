@@ -411,8 +411,10 @@ jobs:
           else
             dart run tool/changelog.dart build --unreleased
           fi
-          dart run tool/changelog.dart render release "${target[@]}" --out release.md
+          dart run tool/changelog.dart render release "${target[@]}" --out changelog.md
           dart run tool/changelog.dart render telegram "${target[@]}" --out telegram.md
+          cat .github/release_template.md > release.md
+          cat changelog.md >> release.md
 
       - name: Generate sha256
         run: |
@@ -423,7 +425,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: ./dist/*
-          body: "BiteClash Universal Multiplatform Release"
+          body_path: release.md
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

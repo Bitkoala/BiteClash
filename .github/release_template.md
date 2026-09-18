@@ -1,58 +1,27 @@
-<div align=center>
+# ⚡ BiteClash 全场景超级网络枢纽 (All-Scenario Super Network Hub)
 
-[![Release Downloads](https://img.shields.io/github/downloads/chen08209/FlClash/vVERSION/total?style=flat-square&logo=github)](https://img.shields.io/github/downloads/chen08209/FlClash/vVERSION/)
+基于 Mihomo (Clash.Meta) 内核的新一代赛博朋克风全平台代理客户端。支持本地独立代理与远程接管中枢（软路由 / NAS 旁路由）双运行模式。  
+A next-generation, cyberpunk-styled multi-platform proxy client powered by Mihomo (Clash.Meta). Supports both standalone proxying and remote network hub control for routers and NAS.
 
-</div>
+---
 
-**Download based on your OS:**
+### 📦 安装包选型指南 / Installation Guide
 
-<div align=left>
-<table>
-    <thead align=left>
-        <tr>
-            <th>OS</th>
-            <th>Download</th>
-        </tr>
-    </thead>
-    <tbody align=left>
-        <tr>
-        <td>Android</td>
-            <td>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-android-arm64-v8a.apk"><img src="https://img.shields.io/badge/APK-ARMv8-168039.svg?logo=android"></a><br>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-android-armeabi-v7a.apk"><img src="https://img.shields.io/badge/APK-ARMv7-45bf55.svg?logo=android"></a><br>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-android-x86_64.apk"><img src="https://img.shields.io/badge/APK-x64-96ed89.svg?logo=android"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>Windows</td>
-            <td>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-windows-amd64-setup.exe"><img src="https://img.shields.io/badge/Setup-x64-2d7d9a.svg?logo=windows"></a><br>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-windows-amd64.zip"><img src="https://img.shields.io/badge/Portable-x64-67b7d1.svg?logo=windows"></a>
-            </td>
-        </tr>
-        <tr>
-            <td>macOS</td>
-            <td>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-macos-arm64.dmg"><img src="https://img.shields.io/badge/DMG-Apple%20Silicon-%23000000.svg?logo=apple"></a><br>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-macos-amd64.dmg"><img src="https://img.shields.io/badge/DMG-Intel%20X64-%2300A9E0.svg?logo=apple"></a><br>
-            </td>
-        </tr>
-        <tr>
-            <td>Linux</td>
-            <td>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-linux-amd64.AppImage"><img src="https://img.shields.io/badge/AppImage-x64-f84e29.svg?logo=linux"> </a><br>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-linux-amd64.deb"><img src="https://img.shields.io/badge/DebPackage-x64-FF9966.svg?logo=debian"> </a><br>
-                <a href="https://github.com/chen08209/FlClash/releases/download/vVERSION/FlClash-VERSION-linux-amd64.rpm"><img src="https://img.shields.io/badge/RpmPackage-x64-F1B42F.svg?logo=redhat"> </a>
-            </td>
-        </tr>
-    </tbody>
-</table>
+| 平台 / Platform | 文件名匹配 / File Pattern | 说明 / Description |
+| :--- | :--- | :--- |
+| **Android** | `*android-arm64-v8a.apk` | 绝大多数现代安卓手机与平板 (Recommended for modern Android devices) |
+| **Android** | `*android-armeabi-v7a.apk` | 较老旧的 32 位安卓设备 (Older 32-bit Android devices) |
+| **Android** | `*android-x86_64.apk` | x86_64 架构安卓模拟器或车机 (x86_64 emulators / devices) |
+| **Windows** | `*windows-setup.exe` | Windows 现代化安装引导程序 (Installer) |
+| **Windows** | `*windows-portable.zip` | Windows 免安装便携版 (Portable zip) |
+| **macOS** | `*macos.dmg` | macOS 通用二进制安装包 (Universal: Apple Silicon & Intel) |
+| **iOS** | `*ios.ipa` | 签名侧载安装包 (AltStore / SideStore / Sideloadly) |
+| **iOS** | `*ios.tipa` | TrollStore 巨魔商店免签名安装包 (TrollStore only) |
+| **Linux** | `*linux-amd64.AppImage` | Linux 开箱即用免安装包 (Universal AppImage) |
+| **Linux** | `*linux-amd64.deb` | Debian / Ubuntu 系统安装包 |
+| **Linux** | `*linux-amd64.rpm` | Fedora / RHEL / CentOS 系统安装包 |
+| **Docker / 旁路由** | `bitkoala/biteclash-gateway:latest` | 容器镜像，专为群晖/unRAID/软路由打造透明网关 |
 
+---
 
-</div>
-
-<div dir="ltr">
-
-**List of all changes:** [ChangeLog](https://github.com/chen08209/FlClash/blob/main/CHANGELOG.md)
-
-</div>
+### 📋 更新日志 / Changelog
