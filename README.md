@@ -25,6 +25,11 @@ Fast, beautiful, feature-complete, completely open-source, and free of ads.
   - **iOS**: Full NetworkExtension integration (`NEPacketTunnelProvider`), shared App Group IPC, sideloadable `.ipa` and TrollStore `.tipa` releases.
   - **macOS**: Universal binaries (Apple Silicon arm64 & Intel x64), status bar icon.
   - **Linux**: AppImage, Deb, and RPM packages with systemd integration.
+- ⚡ **All-Scenario Super Network Hub**:
+  - 🎮 **Dual Core Mode**: Choose between "Local Core" (standalone client proxy) and "Remote Hub" (remote controller mode). Your phone and PC act as instant remote controls for whole-home OpenWrt routers and NAS setups.
+  - 🐳 **BiteClash Gateway (Docker Container / Side-Router)**: Zero-client transparent proxy gateway tailored for Synology, unRAID, TrueNAS, PVE, and Raspberry Pi with automated `nftables` TProxy & Fake-IP DNS interception.
+  - 📶 **BiteClash for OpenWrt (Native .ipk Package)**: Pure and lightweight Linux procd daemon with transparent nftables redirection without unstable LuCI crashes.
+  - 🌐 **Cyberpunk Web Console**: Embedded web management dashboard on port `9091` for instant browser access from any device.
 - ⚡ **Clash Verge Rev Functional Parity**:
   - **Connection Tracker**: Real-time traffic, proxy chains, source/destination IP, rule matching, and connection closing.
   - **Live Log Terminal**: Real-time log streaming with multi-level filtering (Debug, Info, Warning, Error), pause, and search.
@@ -35,13 +40,15 @@ Fast, beautiful, feature-complete, completely open-source, and free of ads.
 
 ---
 
-## 📦 Downloads
+## 📦 Downloads & Deployment Matrix
 
-Grab the latest pre-compiled binaries from [GitHub Releases](https://github.com/Bitkoala/BiteClash/releases/latest):
+Grab the latest pre-compiled binaries from [GitHub Releases](https://github.com/Bitkoala/BiteClash/releases/latest) or pull from Docker:
 
-| Platform | Format | Description |
+| Platform / Form Factor | Package Format / Image | Description & Target Devices |
 | :--- | :--- | :--- |
-| **Windows** | `.exe` / `.zip` | Setup installer and portable ZIP (x64 / arm64) |
+| **Docker Gateway** | `docker compose` / Image | [BiteClash Gateway Guide](gateway/README.md) (Synology, unRAID, TrueNAS, PVE, Linux) |
+| **OpenWrt Router** | `.ipk` Package | [BiteClash for OpenWrt Guide](openwrt/README.md) (Mini PC Routers, ImmortalWrt) |
+| **Windows** | `.exe` / `.zip` | Setup installer and portable ZIP (x64 / arm64, with Remote Hub mode) |
 | **Android** | `.apk` | Universal APK and ABI-split APKs (arm64-v8a, armeabi-v7a, x86_64) |
 | **iOS** | `.ipa` / `.tipa` | Sideloadable IPA (AltStore, SideStore) & TrollStore TIPA |
 | **macOS** | `.dmg` | Disk image for Apple Silicon & Intel Macs |

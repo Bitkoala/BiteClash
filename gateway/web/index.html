@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BiteClash Network Hub Console</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #060913;
+            --bg-surface: #0d1322;
+            --bg-card: rgba(18, 25, 43, 0.75);
+            --bg-card-hover: rgba(28, 38, 64, 0.85);
+            --border-color: rgba(0, 229, 255, 0.18);
+            --border-glow: rgba(0, 229, 255, 0.4);
+            --cyan: #00e5ff;
+            --cyan-glow: 0 0 16px rgba(0, 229, 255, 0.45);
+            --magenta: #d946ef;
+            --magenta-glow: 0 0 16px rgba(217, 70, 239, 0.45);
+            --green: #10b981;
+            --green-glow: 0 0 12px rgba(16, 185, 129, 0.4);
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --radius-md: 12px;
+            --radius-lg: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-base);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 229, 255, 0.04) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(217, 70, 239, 0.04) 0%, transparent 40%);
+            color: var(--text-primary);
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(13, 19, 34, 0.85);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            color: #fff;
+            font-size: 1.25rem;
+            box-shadow: var(--cyan-glow);
+        }
+
+        .brand-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-title {
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: -0.5px;
+            background: linear-gradient(90deg, #ffffff, var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-subtitle {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: 9999px;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--green);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--green);
+            box-shadow: var(--green-glow);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        .status-pill.disconnected {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: var(--red);
+        }
+
+        .status-pill.disconnected .status-dot {
+            background: var(--red);
+            box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+        }
+
+        .btn-icon {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            width: 36px;
+            height: 36px;
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            border-color: var(--cyan);
+            box-shadow: var(--cyan-glow);
+            color: var(--cyan);
+        }
+
+        nav {
+            display: flex;
+            background: rgba(13, 19, 34, 0.4);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 0 1.5rem;
+            gap: 0.5rem;
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            padding: 0.85rem 1.25rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            color: var(--cyan);
+            border-bottom-color: var(--cyan);
+            text-shadow: var(--cyan-glow);
+        }
+
+        main {
+            flex: 1;
+            padding: 1.5rem;
+            max-width: 1380px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.25s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Speed and Metrics Grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1.25rem;
+            backdrop-filter: blur(12px);
+            transition: all 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--border-glow), transparent);
+            opacity: 0.7;
+        }
+
+        .card:hover {
+            border-color: var(--cyan);
+            box-shadow: 0 8px 24px rgba(0, 229, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .metric-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.85rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .metric-value.download {
+            color: var(--cyan);
+            text-shadow: var(--cyan-glow);
+        }
+
+        .metric-value.upload {
+            color: var(--magenta);
+            text-shadow: var(--magenta-glow);
+        }
+
+        .metric-unit {
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: var(--text-muted);
+            margin-left: 0.35rem;
+        }
+
+        /* Mode Selector */
+        .mode-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .mode-selector {
+            display: inline-flex;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0.25rem;
+            gap: 0.25rem;
+        }
+
+        .mode-btn {
+            padding: 0.45rem 1.25rem;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.2), rgba(217, 70, 239, 0.2));
+            color: #fff;
+            border: 1px solid var(--cyan);
+            box-shadow: var(--cyan-glow);
+        }
+
+        /* Proxy Groups */
+        .proxy-group {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            margin-bottom: 1.25rem;
+            padding: 1.25rem;
+        }
+
+        .group-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .group-title-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .group-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .group-badge {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--cyan);
+            font-weight: 600;
+        }
+
+        .group-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-sm {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.35rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-sm:hover {
+            border-color: var(--cyan);
+            color: var(--cyan);
+        }
+
+        .nodes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .node-card {
+            background: rgba(13, 19, 34, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-md);
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .node-card:hover {
+            border-color: var(--cyan);
+            background: var(--bg-card-hover);
+        }
+
+        .node-card.selected {
+            border-color: var(--cyan);
+            background: rgba(0, 229, 255, 0.12);
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.2);
+        }
+
+        .node-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .node-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .node-delay {
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 600;
+        }
+
+        .node-delay.fast { color: var(--green); }
+        .node-delay.medium { color: var(--yellow); }
+        .node-delay.slow { color: var(--red); }
+        .node-delay.error { color: var(--text-muted); }
+
+        /* Connections Table */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-color);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(13, 19, 34, 0.9);
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            white-space: nowrap;
+        }
+
+        tr:hover td {
+            background: rgba(0, 229, 255, 0.03);
+        }
+
+        /* Terminal Logs */
+        .terminal-wrap {
+            background: #04060b;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 1rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.78rem;
+            height: 600px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .log-entry {
+            line-height: 1.5;
+            word-break: break-all;
+        }
+
+        .log-time {
+            color: var(--text-muted);
+            margin-right: 0.5rem;
+        }
+
+        .log-type {
+            font-weight: 700;
+            margin-right: 0.5rem;
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+        }
+
+        .log-type.info { background: rgba(0, 229, 255, 0.15); color: var(--cyan); }
+        .log-type.warning { background: rgba(245, 158, 11, 0.15); color: var(--yellow); }
+        .log-type.error { background: rgba(239, 68, 68, 0.15); color: var(--red); }
+
+        /* Modal Settings */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-glow);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 480px;
+            padding: 1.5rem;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8), var(--cyan-glow);
+        }
+
+        .modal-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 1.25rem;
+            color: var(--cyan);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.4rem;
+        }
+
+        .form-input {
+            width: 100%;
+            background: var(--bg-base);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            padding: 0.6rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            outline: none;
+            font-family: inherit;
+        }
+
+        .form-input:focus {
+            border-color: var(--cyan);
+            box-shadow: var(--cyan-glow);
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--cyan), var(--magenta));
+            border: none;
+            color: #fff;
+            padding: 0.55rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--cyan-glow);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.55rem 1.25rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="brand">
+            <div class="brand-logo">B</div>
+            <div class="brand-text">
+                <span class="brand-title">BiteClash</span>
+                <span class="brand-subtitle">Super Network Hub</span>
+            </div>
+        </div>
+
+        <div class="header-actions">
+            <div id="statusPill" class="status-pill">
+                <div class="status-dot"></div>
+                <span id="statusText">HUB ONLINE</span>
+            </div>
+            <button class="btn-icon" id="btnOpenSettings" title="中枢设置">⚙️</button>
+        </div>
+    </header>
+
+    <nav>
+        <div class="nav-item active" data-tab="overview">状态概览 (Overview)</div>
+        <div class="nav-item" data-tab="proxies">策略分流 (Proxies)</div>
+        <div class="nav-item" data-tab="connections">实时连接 (Connections)</div>
+        <div class="nav-item" data-tab="logs">终端日志 (Logs)</div>
+    </nav>
+
+    <main>
+        <!-- TAB 1: OVERVIEW -->
+        <section id="tab-overview" class="tab-content active">
+            <div class="mode-row">
+                <div class="mode-selector">
+                    <button class="mode-btn" data-mode="rule" onclick="setMode('rule')">RULE 规则分流</button>
+                    <button class="mode-btn" data-mode="global" onclick="setMode('global')">GLOBAL 全局代理</button>
+                    <button class="mode-btn" data-mode="direct" onclick="setMode('direct')">DIRECT 全局直连</button>
+                </div>
+                <div>
+                    <button class="btn-sm" onclick="fetchConfigs()">🔄 刷新配置状态</button>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="card">
+                    <div class="metric-label">
+                        <span>实时下载速率 (Download)</span>
+                        <span>⬇️</span>
+                    </div>
+                    <div class="metric-value download" id="downSpeed">0<span class="metric-unit">KB/s</span></div>
+                </div>
+
+                <div class="card">
+                    <div class="metric-label">
+                        <span>实时上传速率 (Upload)</span>
+                        <span>⬆️</span>
+                    </div>
+                    <div class="metric-value upload" id="upSpeed">0<span class="metric-unit">KB/s</span></div>
+                </div>
+
+                <div class="card">
+                    <div class="metric-label">
+                        <span>累计总下载 (Total Inbound)</span>
+                        <span>📊</span>
+                    </div>
+                    <div class="metric-value" id="downTotal">0<span class="metric-unit">MB</span></div>
+                </div>
+
+                <div class="card">
+                    <div class="metric-label">
+                        <span>活跃连接数 (Active Connections)</span>
+                        <span>⚡</span>
+                    </div>
+                    <div class="metric-value" id="activeConnCount">0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="metric-label">核心网关运行概况</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 0.75rem; font-size: 0.85rem;">
+                    <div>目标中枢：<span id="hubHostInfo" style="color: var(--cyan); font-family: monospace;">127.0.0.1:9090</span></div>
+                    <div>核心版本：<span id="hubVersionInfo" style="color: var(--text-primary); font-family: monospace;">Mihomo Meta</span></div>
+                    <div>内存占用：<span id="hubMemoryInfo" style="color: var(--magenta); font-family: monospace;">-</span></div>
+                    <div>透明代理：<span style="color: var(--green); font-weight: 600;">TProxy 12345 (已挂载)</span></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: PROXIES -->
+        <section id="tab-proxies" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="font-size: 1.1rem; font-weight: 700;">分流策略组与节点矩阵</h2>
+                <button class="btn-sm" onclick="fetchProxies()">🔄 刷新节点列表</button>
+            </div>
+            <div id="proxyGroupsContainer">
+                <div style="text-align: center; padding: 2rem; color: var(--text-muted);">正在加载节点数据...</div>
+            </div>
+        </section>
+
+        <!-- TAB 3: CONNECTIONS -->
+        <section id="tab-connections" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="font-size: 1.1rem; font-weight: 700;">局域网全设备活跃连接</h2>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-sm" onclick="fetchConnections()">🔄 刷新列表</button>
+                    <button class="btn-sm" style="color: var(--red); border-color: rgba(239, 68, 68, 0.4);" onclick="closeAllConnections()">❌ 断开全部连接</button>
+                </div>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>源地址 (Client IP)</th>
+                            <th>目的主机 (Destination)</th>
+                            <th>路由链 (Outbound)</th>
+                            <th>规则 (Rule)</th>
+                            <th>传输量 (Down / Up)</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="connectionsBody">
+                        <tr>
+                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">暂无活动连接</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- TAB 4: LOGS -->
+        <section id="tab-logs" class="tab-content">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h2 style="font-size: 1.1rem; font-weight: 700;">中枢网关实时日志流</h2>
+                <button class="btn-sm" onclick="clearLogs()">🗑️ 清空面板</button>
+            </div>
+            <div class="terminal-wrap" id="terminalLogs"></div>
+        </section>
+    </main>
+
+    <!-- SETTINGS MODAL -->
+    <div class="modal-overlay" id="settingsModal">
+        <div class="modal-box">
+            <h3 class="modal-title">网关核心中枢连接设置</h3>
+            <div class="form-group">
+                <label class="form-label">Core API 地址 (Host / IP)</label>
+                <input class="form-input" id="cfgHost" placeholder="例如 192.168.31.1 或 127.0.0.1">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Controller 端口 (Port)</label>
+                <input class="form-input" id="cfgPort" placeholder="默认 9090" type="number">
+            </div>
+            <div class="form-group">
+                <label class="form-label">访问密钥 (Secret Token)</label>
+                <input class="form-input" id="cfgSecret" placeholder="无密钥请留空" type="password">
+            </div>
+            <div class="modal-actions">
+                <button class="btn-secondary" onclick="closeSettingsModal()">取消</button>
+                <button class="btn-primary" onclick="saveSettings()">保存并重连</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration state with local persistence
+        const CONFIG = {
+            host: localStorage.getItem('biteclash_api_host') || (window.location.hostname || '127.0.0.1'),
+            port: localStorage.getItem('biteclash_api_port') || '9090',
+            secret: localStorage.getItem('biteclash_api_secret') || ''
+        };
+
+        let trafficWs = null;
+        let logsWs = null;
+        let proxiesData = {};
+
+        function getBaseUrl() {
+            return `http://${CONFIG.host}:${CONFIG.port}`;
+        }
+
+        function getWsUrl(path) {
+            return `ws://${CONFIG.host}:${CONFIG.port}${path}`;
+        }
+
+        function getHeaders() {
+            const headers = { 'Content-Type': 'application/json' };
+            if (CONFIG.secret) {
+                headers['Authorization'] = `Bearer ${CONFIG.secret}`;
+            }
+            return headers;
+        }
+
+        function formatBytes(bytes) {
+            if (!bytes || bytes === 0) return '0 B';
+            const k = 1024;
+            const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+        }
+
+        // Navigation Tabs
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                item.classList.add('active');
+                const tabId = item.getAttribute('data-tab');
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+
+                if (tabId === 'proxies') fetchProxies();
+                if (tabId === 'connections') fetchConnections();
+            });
+        });
+
+        // Initialize Settings Modal
+        document.getElementById('btnOpenSettings').onclick = () => {
+            document.getElementById('cfgHost').value = CONFIG.host;
+            document.getElementById('cfgPort').value = CONFIG.port;
+            document.getElementById('cfgSecret').value = CONFIG.secret;
+            document.getElementById('settingsModal').classList.add('active');
+        };
+
+        function closeSettingsModal() {
+            document.getElementById('settingsModal').classList.remove('active');
+        }
+
+        function saveSettings() {
+            CONFIG.host = document.getElementById('cfgHost').value.trim() || '127.0.0.1';
+            CONFIG.port = document.getElementById('cfgPort').value.trim() || '9090';
+            CONFIG.secret = document.getElementById('cfgSecret').value.trim();
+
+            localStorage.setItem('biteclash_api_host', CONFIG.host);
+            localStorage.setItem('biteclash_api_port', CONFIG.port);
+            localStorage.setItem('biteclash_api_secret', CONFIG.secret);
+
+            closeSettingsModal();
+            connectAll();
+        }
+
+        // Connect WebSockets and REST
+        function connectAll() {
+            document.getElementById('hubHostInfo').textContent = `${CONFIG.host}:${CONFIG.port}`;
+
+            if (trafficWs) trafficWs.close();
+            if (logsWs) logsWs.close();
+
+            fetchConfigs();
+            fetchVersion();
+            connectTrafficWs();
+            connectLogsWs();
+        }
+
+        function setStatus(online) {
+            const pill = document.getElementById('statusPill');
+            const text = document.getElementById('statusText');
+            if (online) {
+                pill.className = 'status-pill';
+                text.textContent = 'HUB ONLINE';
+            } else {
+                pill.className = 'status-pill disconnected';
+                text.textContent = 'DISCONNECTED';
+            }
+        }
+
+        // Fetch Version
+        async function fetchVersion() {
+            try {
+                const res = await fetch(`${getBaseUrl()}/version`, { headers: getHeaders() });
+                if (res.ok) {
+                    const data = await res.json();
+                    document.getElementById('hubVersionInfo').textContent = `${data.version || 'Mihomo'} (Core)`;
+                    setStatus(true);
+                } else {
+                    setStatus(false);
+                }
+            } catch (e) {
+                setStatus(false);
+            }
+        }
+
+        // Fetch Configs (Mode)
+        async function fetchConfigs() {
+            try {
+                const res = await fetch(`${getBaseUrl()}/configs`, { headers: getHeaders() });
+                if (res.ok) {
+                    const data = await res.json();
+                    const mode = (data.mode || 'rule').toLowerCase();
+                    document.querySelectorAll('.mode-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.getAttribute('data-mode') === mode);
+                    });
+                    setStatus(true);
+                }
+            } catch (e) {
+                setStatus(false);
+            }
+        }
+
+        // Switch Mode
+        async function setMode(mode) {
+            try {
+                await fetch(`${getBaseUrl()}/configs`, {
+                    method: 'PATCH',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ mode: mode.charAt(0).toUpperCase() + mode.slice(1) })
+                });
+                fetchConfigs();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Traffic WebSocket
+        function connectTrafficWs() {
+            const tokenQuery = CONFIG.secret ? `?token=${encodeURIComponent(CONFIG.secret)}` : '';
+            trafficWs = new WebSocket(getWsUrl(`/traffic${tokenQuery}`));
+
+            trafficWs.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    const up = data.up || 0;
+                    const down = data.down || 0;
+                    document.getElementById('upSpeed').innerHTML = `${formatSpeed(up)}`;
+                    document.getElementById('downSpeed').innerHTML = `${formatSpeed(down)}`;
+                } catch (e) {}
+            };
+
+            trafficWs.onerror = () => setStatus(false);
+            trafficWs.onclose = () => setTimeout(connectTrafficWs, 5000);
+        }
+
+        function formatSpeed(bytes) {
+            if (bytes > 1024 * 1024) {
+                return `${(bytes / (1024 * 1024)).toFixed(1)}<span class="metric-unit">MB/s</span>`;
+            }
+            return `${(bytes / 1024).toFixed(1)}<span class="metric-unit">KB/s</span>`;
+        }
+
+        // Logs WebSocket
+        function connectLogsWs() {
+            const tokenQuery = CONFIG.secret ? `?level=info&token=${encodeURIComponent(CONFIG.secret)}` : '?level=info';
+            logsWs = new WebSocket(getWsUrl(`/logs${tokenQuery}`));
+
+            const term = document.getElementById('terminalLogs');
+
+            logsWs.onmessage = (event) => {
+                try {
+                    const data = JSON.parse(event.data);
+                    const time = new Date().toLocaleTimeString();
+                    const line = document.createElement('div');
+                    line.className = 'log-entry';
+                    line.innerHTML = `<span class="log-time">[${time}]</span><span class="log-type ${data.type || 'info'}">${(data.type || 'INFO').toUpperCase()}</span><span>${data.payload || ''}</span>`;
+                    term.appendChild(line);
+                    term.scrollTop = term.scrollHeight;
+                } catch (e) {}
+            };
+
+            logsWs.onclose = () => setTimeout(connectLogsWs, 5000);
+        }
+
+        function clearLogs() {
+            document.getElementById('terminalLogs').innerHTML = '';
+        }
+
+        // Proxies
+        async function fetchProxies() {
+            try {
+                const res = await fetch(`${getBaseUrl()}/proxies`, { headers: getHeaders() });
+                if (res.ok) {
+                    const data = await res.json();
+                    proxiesData = data.proxies || {};
+                    renderProxies();
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function renderProxies() {
+            const container = document.getElementById('proxyGroupsContainer');
+            container.innerHTML = '';
+
+            const groups = Object.keys(proxiesData).filter(name => {
+                const item = proxiesData[name];
+                return item.type === 'Selector' || item.type === 'URLTest' || item.type === 'Fallback';
+            });
+
+            if (groups.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);">未发现策略组配置</div>';
+                return;
+            }
+
+            groups.forEach(groupName => {
+                const group = proxiesData[groupName];
+                const groupCard = document.createElement('div');
+                groupCard.className = 'proxy-group';
+
+                const allNodes = group.all || [];
+                const currentNow = group.now;
+
+                let nodesHtml = '';
+                allNodes.forEach(nodeName => {
+                    const node = proxiesData[nodeName] || { type: 'Proxy' };
+                    const isSelected = nodeName === currentNow;
+                    const history = node.history || [];
+                    const lastDelay = history.length > 0 ? history[history.length - 1].delay : 0;
+                    
+                    let delayClass = 'error';
+                    let delayText = '-';
+                    if (lastDelay > 0) {
+                        delayText = `${lastDelay}ms`;
+                        if (lastDelay < 200) delayClass = 'fast';
+                        else if (lastDelay < 500) delayClass = 'medium';
+                        else delayClass = 'slow';
+                    }
+
+                    nodesHtml += `
+                        <div class="node-card ${isSelected ? 'selected' : ''}" onclick="selectNode('${groupName}', '${nodeName}')">
+                            <div class="node-name" title="${nodeName}">${nodeName}</div>
+                            <div class="node-meta">
+                                <span>${node.type || 'Proxy'}</span>
+                                <span class="node-delay ${delayClass}">${delayText}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                groupCard.innerHTML = `
+                    <div class="group-header">
+                        <div class="group-title-wrap">
+                            <span class="group-title">${groupName}</span>
+                            <span class="group-badge">${group.type}</span>
+                            <span style="font-size: 0.8rem; color: var(--text-secondary);">当前: <strong style="color: var(--cyan);">${currentNow}</strong></span>
+                        </div>
+                        <div class="group-actions">
+                            <button class="btn-sm" onclick="testGroupDelay('${groupName}')">⚡ 测速</button>
+                        </div>
+                    </div>
+                    <div class="nodes-grid">${nodesHtml}</div>
+                `;
+
+                container.appendChild(groupCard);
+            });
+        }
+
+        async function selectNode(groupName, nodeName) {
+            try {
+                await fetch(`${getBaseUrl()}/proxies/${encodeURIComponent(groupName)}`, {
+                    method: 'PUT',
+                    headers: getHeaders(),
+                    body: JSON.stringify({ name: nodeName })
+                });
+                fetchProxies();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function testGroupDelay(groupName) {
+            try {
+                await fetch(`${getBaseUrl()}/group/${encodeURIComponent(groupName)}/delay?url=http://www.gstatic.com/generate_204&timeout=3000`, {
+                    headers: getHeaders()
+                });
+                setTimeout(fetchProxies, 1500);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Connections
+        async function fetchConnections() {
+            try {
+                const res = await fetch(`${getBaseUrl()}/connections`, { headers: getHeaders() });
+                if (res.ok) {
+                    const data = await res.json();
+                    renderConnections(data.connections || []);
+                    document.getElementById('activeConnCount').textContent = (data.connections || []).length;
+                    document.getElementById('downTotal').innerHTML = `${formatBytes(data.downloadTotal || 0)}`;
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function renderConnections(connections) {
+            const tbody = document.getElementById('connectionsBody');
+            tbody.innerHTML = '';
+
+            if (connections.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">暂无活动连接</td></tr>';
+                return;
+            }
+
+            connections.slice(0, 50).forEach(conn => {
+                const tr = document.createElement('tr');
+                const src = `${conn.metadata.sourceIP}:${conn.metadata.sourcePort}`;
+                const dst = `${conn.metadata.host || conn.metadata.destinationIP}:${conn.metadata.destinationPort}`;
+                const chain = (conn.chains || []).join(' → ');
+                const rule = `${conn.rule} (${conn.rulePayload || ''})`;
+                const transfer = `${formatBytes(conn.download)} / ${formatBytes(conn.upload)}`;
+
+                tr.innerHTML = `
+                    <td style="font-family: monospace;">${src}</td>
+                    <td style="font-family: monospace; color: var(--cyan);">${dst}</td>
+                    <td>${chain}</td>
+                    <td style="color: var(--text-muted);">${rule}</td>
+                    <td style="font-family: monospace;">${transfer}</td>
+                    <td>
+                        <button class="btn-sm" style="color: var(--red); border-color: rgba(239, 68, 68, 0.4);" onclick="closeConnection('${conn.id}')">断开</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function closeConnection(id) {
+            try {
+                await fetch(`${getBaseUrl()}/connections/${id}`, {
+                    method: 'DELETE',
+                    headers: getHeaders()
+                });
+                fetchConnections();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function closeAllConnections() {
+            try {
+                await fetch(`${getBaseUrl()}/connections`, {
+                    method: 'DELETE',
+                    headers: getHeaders()
+                });
+                fetchConnections();
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // Start initial connection
+        window.addEventListener('DOMContentLoaded', connectAll);
+    </script>
+</body>
+</html>

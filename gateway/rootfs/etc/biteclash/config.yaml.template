@@ -1,0 +1,58 @@
+# BiteClash Gateway Default Configuration Template
+mixed-port: 7890
+tproxy-port: 12345
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+ipv6: false
+external-controller: 0.0.0.0:9090
+secret: ""
+
+# Geo Data Auto-Update
+geo-auto-update: true
+geo-update-interval: 24
+
+# Embedded DNS for Fake-IP & Transparent Redirection
+dns:
+  enable: true
+  listen: 0.0.0.0:1053
+  ipv6: false
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  fake-ip-filter:
+    - "*.lan"
+    - "*.local"
+    - "localhost.ptlogin2.qq.com"
+  nameserver:
+    - 223.5.5.5
+    - 119.29.29.29
+  fallback:
+    - 8.8.8.8
+    - 1.1.1.1
+    - tls://dns.google:853
+
+sniffer:
+  enable: true
+  sniffing:
+    - tls
+    - http
+    - quic
+  skip-domain:
+    - "Mijia Cloud"
+
+proxies:
+  - name: "DIRECT"
+    type: direct
+    udp: true
+
+proxy-groups:
+  - name: "PROXY"
+    type: select
+    proxies:
+      - "DIRECT"
+
+rules:
+  - GEOIP,private,DIRECT,no-resolve
+  - GEOIP,CN,DIRECT
+  - MATCH,PROXY
