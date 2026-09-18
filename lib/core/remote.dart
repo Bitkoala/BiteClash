@@ -60,8 +60,10 @@ class RemoteCoreHandler extends CoreHandlerInterface {
       final uri = Uri.parse(
         '$wsUrl/traffic${secret.isNotEmpty ? '?token=$secret' : ''}',
       );
-      _trafficChannel = WebSocketChannel.connect(uri);
-      _trafficChannel?.stream.listen(
+      final channel = WebSocketChannel.connect(uri);
+      channel.ready.catchError((_) {});
+      _trafficChannel = channel;
+      channel.stream.listen(
         (data) {
           try {
             final jsonMap =
@@ -77,9 +79,12 @@ class RemoteCoreHandler extends CoreHandlerInterface {
     }
   }
 
-  void _stopTrafficSubscription() {
-    _trafficChannel?.sink.close();
+  Future<void> _stopTrafficSubscription() async {
+    final channel = _trafficChannel;
     _trafficChannel = null;
+    if (channel != null) {
+      await channel.sink.close();
+    }
   }
 
   @override
@@ -104,9 +109,12 @@ class RemoteCoreHandler extends CoreHandlerInterface {
 
   @override
   Future<CoreLifecycleResult> stop() async {
-    _stopTrafficSubscription();
-    await _logsChannel?.sink.close();
+    await _stopTrafficSubscription();
+    final logs = _logsChannel;
     _logsChannel = null;
+    if (logs != null) {
+      await logs.sink.close();
+    }
     _isConnected = false;
     return CoreLifecycleResult(
       revision: ++_lifecycleRevision,
@@ -307,7 +315,9 @@ class RemoteCoreHandler extends CoreHandlerInterface {
       final uri = Uri.parse(
         '$wsUrl/logs${secret.isNotEmpty ? '?token=$secret' : ''}',
       );
-      _logsChannel = WebSocketChannel.connect(uri);
+      final channel = WebSocketChannel.connect(uri);
+      channel.ready.catchError((_) {});
+      _logsChannel = channel;
     } catch (_) {}
   }
 
