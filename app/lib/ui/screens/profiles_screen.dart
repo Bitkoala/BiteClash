@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/proxy/windows_proxy.dart';
+import '../../state/app_state.dart';
 import '../../state/profiles_state.dart';
+import '../../state/proxies_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/glass_container.dart';
 
@@ -184,7 +187,25 @@ class ProfilesScreen extends ConsumerWidget {
                           children: [
                             if (!isActive)
                               TextButton(
-                                onPressed: () => profilesNotifier.applyProfile(profile.id),
+                                onPressed: () async {
+                                  await profilesNotifier.applyProfile(profile.id);
+                                  final appState = ref.read(appStateProvider);
+                                  if (!appState.isRunning) {
+                                    await ref.read(appStateProvider.notifier).startCore();
+                                  } else {
+                                    await WindowsProxyManager.enableProxy(port: 7890);
+                                  }
+                                  await ref.read(proxiesStateProvider.notifier).refresh();
+                                  if (context.mounted) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text('已应用【${profile.name}】，系统代理已激活并已加载节点！'),
+                                        backgroundColor: AppTheme.secondary,
+                                        duration: const Duration(seconds: 2),
+                                      ),
+                                    );
+                                  }
+                                },
                                 style: TextButton.styleFrom(
                                   foregroundColor: AppTheme.primary,
                                   backgroundColor: AppTheme.primary.withValues(alpha: 0.1),

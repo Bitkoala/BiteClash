@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/api/mihomo_api_client.dart';
 import '../../core/models/traffic.dart';
 import '../../core/process/mihomo_process.dart';
@@ -84,8 +85,15 @@ class AppNotifier extends StateNotifier<AppState> {
   }
 
   String _resolveBasePath() {
-    final cur = Directory.current.path;
-    return cur.endsWith('app') ? Directory(cur).parent.path : cur;
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      final exeDir = File(Platform.resolvedExecutable).parent.path;
+      if (File('$exeDir\\core\\windows\\mihomo.exe').existsSync()) {
+        return exeDir;
+      }
+      final cur = Directory.current.path;
+      return cur.endsWith('app') ? Directory(cur).parent.path : cur;
+    }
+    return Directory.current.path;
   }
 
   /// 一键启动/停止内核并切换系统代理
@@ -97,14 +105,25 @@ class AppNotifier extends StateNotifier<AppState> {
     }
   }
 
-  /// 启动内核
+  /// 启动内核 (自动优先读取当前选中的订阅配置)
   Future<void> startCore() async {
     state = state.copyWith(isLoading: true, error: null);
     try {
       final basePath = _resolveBasePath();
       final exePath = '$basePath\\core\\windows\\mihomo.exe';
-      final configPath = '$basePath\\core\\configs\\default_config.yaml';
       final workDir = '$basePath\\core\\configs';
+
+      // 读取持久化中激活的订阅配置
+      final prefs = await SharedPreferences.getInstance();
+      final activeId = prefs.getString('active_profile_id');
+      String configPath = '$basePath\\core\\configs\\default_config.yaml';
+
+      if (activeId != null && activeId.isNotEmpty) {
+        final profileFile = File('$basePath\\core\\configs\\profiles\\$activeId.yaml');
+        if (profileFile.existsSync()) {
+          configPath = profileFile.path;
+        }
+      }
 
       _processService = MihomoProcessService(
         executablePath: exePath,

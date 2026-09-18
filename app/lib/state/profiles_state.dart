@@ -4,7 +4,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:yaml/yaml.dart';
-import '../../core/api/mihomo_api_client.dart';
+import '../core/api/mihomo_api_client.dart';
+import '../core/configs/config_merger.dart';
 
 class ProfileItem {
   final String id;
@@ -102,11 +103,18 @@ class ProfilesNotifier extends StateNotifier<ProfilesState> {
   }
 
   String _resolveBasePath() {
-    final cur = Directory.current.path;
-    return cur.endsWith('app') ? Directory(cur).parent.path : cur;
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      final exeDir = File(Platform.resolvedExecutable).parent.path;
+      if (File('$exeDir\\core\\windows\\mihomo.exe').existsSync()) {
+        return exeDir;
+      }
+      final cur = Directory.current.path;
+      return cur.endsWith('app') ? Directory(cur).parent.path : cur;
+    }
+    return Directory.current.path;
   }
 
-  /// 下载并添加 Clash 订阅
+  /// 下载并添加 Clash 订阅 (自动注入混合代理端口与控制端口)
   Future<bool> addSubscription(String name, String url) async {
     state = state.copyWith(isLoading: true, error: null);
     try {
@@ -135,7 +143,8 @@ class ProfilesNotifier extends StateNotifier<ProfilesState> {
       if (!saveDir.existsSync()) saveDir.createSync(recursive: true);
 
       final filePath = '${saveDir.path}\\$id.yaml';
-      await File(filePath).writeAsString(yamlContent);
+      // 核心注入：确保 mixed-port: 7890 和 external-controller: 127.0.0.1:9090 必定存在
+      await ConfigMerger.saveSanitizedProfile(filePath, yamlContent);
 
       final item = ProfileItem(
         id: id,
