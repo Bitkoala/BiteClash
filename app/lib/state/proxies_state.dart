@@ -3,11 +3,21 @@ import '../../core/api/mihomo_api_client.dart';
 import '../../core/models/proxy_group.dart';
 import '../../core/models/proxy_node.dart';
 
+enum ProxySortMode {
+  defaultOrder,
+  latencyAsc,
+  latencyDesc,
+  name,
+}
+
 class ProxiesState {
   final Map<String, ProxyGroup> groups;
   final Map<String, ProxyNode> nodes;
   final bool isLoading;
   final Set<String> testingNodes;
+  final String searchKeyword;
+  final ProxySortMode sortMode;
+  final bool hideOffline;
   final String? error;
 
   const ProxiesState({
@@ -15,14 +25,63 @@ class ProxiesState {
     this.nodes = const {},
     this.isLoading = false,
     this.testingNodes = const {},
+    this.searchKeyword = '',
+    this.sortMode = ProxySortMode.defaultOrder,
+    this.hideOffline = false,
     this.error,
   });
+
+  List<String> getFilteredNodes(ProxyGroup group) {
+    var list = List<String>.from(group.all);
+
+    // 1. 关键字检索 (支持正则或模糊匹配，如 "香港", "HK", "01")
+    if (searchKeyword.isNotEmpty) {
+      final q = searchKeyword.toLowerCase();
+      list = list.where((name) => name.toLowerCase().contains(q)).toList();
+    }
+
+    // 2. 隐藏超时/离线节点
+    if (hideOffline) {
+      list = list.where((name) {
+        final node = nodes[name];
+        return node != null && node.delay != null && node.delay! > 0;
+      }).toList();
+    }
+
+    // 3. 智能排序
+    switch (sortMode) {
+      case ProxySortMode.latencyAsc:
+        list.sort((a, b) {
+          final da = nodes[a]?.delay ?? 999999;
+          final db = nodes[b]?.delay ?? 999999;
+          return da.compareTo(db);
+        });
+        break;
+      case ProxySortMode.latencyDesc:
+        list.sort((a, b) {
+          final da = nodes[a]?.delay ?? -1;
+          final db = nodes[b]?.delay ?? -1;
+          return db.compareTo(da);
+        });
+        break;
+      case ProxySortMode.name:
+        list.sort((a, b) => a.compareTo(b));
+        break;
+      case ProxySortMode.defaultOrder:
+        break;
+    }
+
+    return list;
+  }
 
   ProxiesState copyWith({
     Map<String, ProxyGroup>? groups,
     Map<String, ProxyNode>? nodes,
     bool? isLoading,
     Set<String>? testingNodes,
+    String? searchKeyword,
+    ProxySortMode? sortMode,
+    bool? hideOffline,
     String? error,
   }) {
     return ProxiesState(
@@ -30,6 +89,9 @@ class ProxiesState {
       nodes: nodes ?? this.nodes,
       isLoading: isLoading ?? this.isLoading,
       testingNodes: testingNodes ?? this.testingNodes,
+      searchKeyword: searchKeyword ?? this.searchKeyword,
+      sortMode: sortMode ?? this.sortMode,
+      hideOffline: hideOffline ?? this.hideOffline,
       error: error,
     );
   }
@@ -40,6 +102,18 @@ class ProxiesNotifier extends StateNotifier<ProxiesState> {
 
   ProxiesNotifier() : super(const ProxiesState()) {
     refresh();
+  }
+
+  void setSearchKeyword(String kw) {
+    state = state.copyWith(searchKeyword: kw.trim());
+  }
+
+  void setSortMode(ProxySortMode mode) {
+    state = state.copyWith(sortMode: mode);
+  }
+
+  void toggleHideOffline() {
+    state = state.copyWith(hideOffline: !state.hideOffline);
   }
 
   /// 刷新所有策略组和节点

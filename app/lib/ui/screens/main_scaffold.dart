@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../state/app_state.dart';
 import '../theme/app_theme.dart';
 import '../widgets/sidebar_nav.dart';
+import 'connections_screen.dart';
 import 'dashboard_screen.dart';
+import 'logs_screen.dart';
 import 'profiles_screen.dart';
 import 'proxies_screen.dart';
 import 'settings_screen.dart';
@@ -22,6 +24,8 @@ class _MainScaffoldState extends ConsumerState<MainScaffold> {
   final _screens = const [
     DashboardScreen(),
     ProxiesScreen(),
+    ConnectionsScreen(),
+    LogsScreen(),
     ProfilesScreen(),
     SettingsScreen(),
   ];

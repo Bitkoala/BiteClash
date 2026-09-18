@@ -26,9 +26,19 @@ const navItems = [
     label: '节点策略',
   ),
   NavItemData(
+    icon: Icons.alt_route_outlined,
+    activeIcon: Icons.alt_route_rounded,
+    label: '连接管理',
+  ),
+  NavItemData(
+    icon: Icons.terminal_outlined,
+    activeIcon: Icons.terminal_rounded,
+    label: '内核日志',
+  ),
+  NavItemData(
     icon: Icons.cloud_download_outlined,
     activeIcon: Icons.cloud_download_rounded,
-    label: '订阅管理',
+    label: '订阅配置',
   ),
   NavItemData(
     icon: Icons.tune_outlined,
@@ -111,7 +121,7 @@ class SidebarNav extends StatelessWidget {
             Expanded(
               child: ListView.separated(
                 itemCount: navItems.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 8),
+                separatorBuilder: (_, _) => const SizedBox(height: 8),
                 itemBuilder: (context, index) {
                   final item = navItems[index];
                   final isSelected = selectedIndex == index;

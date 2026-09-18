@@ -110,7 +110,7 @@ class ProfilesScreen extends ConsumerWidget {
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: profilesState.profiles.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 16),
+                separatorBuilder: (_, _) => const SizedBox(height: 16),
                 itemBuilder: (context, index) {
                   final profile = profilesState.profiles[index];
                   final isActive = profilesState.activeProfileId == profile.id;

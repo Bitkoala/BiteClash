@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import '../models/connection_item.dart';
+import '../models/log_item.dart';
 import '../models/proxy_group.dart';
 import '../models/proxy_node.dart';
 import '../models/traffic.dart';
@@ -164,6 +166,90 @@ class MihomoApiClient {
     }
 
     controller = StreamController<Traffic>.broadcast(
+      onListen: connect,
+      onCancel: () {
+        channel.sink.close();
+      },
+    );
+
+    return controller.stream;
+  }
+
+  /// 获取当前所有活跃连接与总流量
+  Future<({int uploadTotal, int downloadTotal, List<ConnectionItem> connections})> getConnections() async {
+    try {
+      final res = await _dio.get('/connections');
+      final data = res.data as Map<String, dynamic>;
+      final upTotal = data['uploadTotal'] as int? ?? 0;
+      final downTotal = data['downloadTotal'] as int? ?? 0;
+      final rawList = data['connections'] as List<dynamic>? ?? [];
+
+      final list = rawList
+          .map((e) => ConnectionItem.fromJson(e as Map<String, dynamic>))
+          .toList();
+
+      return (
+        uploadTotal: upTotal,
+        downloadTotal: downTotal,
+        connections: list,
+      );
+    } catch (_) {
+      return (
+        uploadTotal: 0,
+        downloadTotal: 0,
+        connections: <ConnectionItem>[],
+      );
+    }
+  }
+
+  /// 断开指定的网络连接
+  Future<bool> closeConnection(String id) async {
+    try {
+      final res = await _dio.delete('/connections/$id');
+      return res.statusCode == 200 || res.statusCode == 204;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /// 订阅实时日志 WebSocket 流 (/logs)
+  Stream<LogItem> getLogsStream({String level = 'info'}) {
+    final wsUri = Uri(
+      scheme: 'ws',
+      host: host,
+      port: port,
+      path: '/logs',
+      queryParameters: {
+        'level': level,
+        if (secret.isNotEmpty) 'token': secret,
+      },
+    );
+
+    late WebSocketChannel channel;
+    late StreamController<LogItem> controller;
+
+    void connect() {
+      try {
+        channel = WebSocketChannel.connect(wsUri);
+        channel.stream.listen(
+          (message) {
+            try {
+              final json = jsonDecode(message.toString()) as Map<String, dynamic>;
+              controller.add(LogItem.fromJson(json));
+            } catch (_) {}
+          },
+          onError: (err) {
+            controller.addError(err);
+          },
+          onDone: () {},
+          cancelOnError: false,
+        );
+      } catch (e) {
+        controller.addError(e);
+      }
+    }
+
+    controller = StreamController<LogItem>.broadcast(
       onListen: connect,
       onCancel: () {
         channel.sink.close();

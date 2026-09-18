@@ -145,7 +145,7 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 Switch(
                   value: appState.isProxyEnabled,
-                  activeColor: AppTheme.primary,
+                  activeThumbColor: AppTheme.primary,
                   onChanged: (val) => appNotifier.toggleSystemProxy(),
                 ),
               ],
