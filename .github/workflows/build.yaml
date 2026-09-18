@@ -232,6 +232,7 @@ jobs:
     needs: [ dart, plugins, go, android, rust, windows-helper-test ]
     runs-on: ${{ matrix.os }}
     strategy:
+      fail-fast: false
       matrix:
         include:
           - platform: android
@@ -350,6 +351,7 @@ jobs:
         if: "!startsWith(matrix.platform, 'ios')"
         env:
           ANDROID_NDK_HOME: ${{ steps.build-ndk.outputs.ndk-path }}
+          APPIMAGE_EXTRACT_AND_RUN: '1'
         run: dart setup.dart ${{ matrix.platform }} ${{ env.IS_STABLE == 'true' && '--env stable' || '' }} -v
 
       - name: Upload
@@ -363,6 +365,7 @@ jobs:
     permissions:
       contents: write
     needs: [ build ]
+    if: always() && !cancelled() && contains(needs.build.result, 'success')
     runs-on: ubuntu-latest
     services:
       telegram-bot-api:

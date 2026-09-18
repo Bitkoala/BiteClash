@@ -323,16 +323,31 @@ Future<int> _ensureLinuxDependencies() async {
   stdout.writeln('Downloading appimagetool...');
   final downloadName =
       'appimagetool-${appImageToolArch(_detectArch())}.AppImage';
-  final dlResult = await Process.run('wget', [
-    '-O',
-    appimagetool,
+  final candidateUrls = [
+    'https://github.com/AppImage/appimagetool/releases/download/continuous/$downloadName',
     'https://github.com/AppImage/AppImageKit/releases/download/continuous/$downloadName',
-  ]);
-  if (dlResult.exitCode != 0) {
-    stderr.write(dlResult.stderr);
-    return dlResult.exitCode;
+  ];
+  int dlExit = 1;
+  for (final url in candidateUrls) {
+    stdout.writeln('Trying download from $url...');
+    dlExit = await _runLinuxDependencyCommand([
+      'wget',
+      '-q',
+      '-O',
+      appimagetool,
+      url,
+    ]);
+    if (dlExit == 0 &&
+        File(appimagetool).existsSync() &&
+        File(appimagetool).lengthSync() > 1024) {
+      break;
+    }
   }
-  await Process.run('chmod', ['+x', appimagetool]);
+  if (dlExit != 0 || !File(appimagetool).existsSync()) {
+    stderr.writeln('Failed to download appimagetool');
+    return dlExit == 0 ? 1 : dlExit;
+  }
+  await _runLinuxDependencyCommand(['chmod', '+x', appimagetool]);
   return 0;
 }
 
@@ -382,7 +397,28 @@ Future<int> _installLinuxPackages(List<String> pkgs) async {
     return 0;
   }
 
-  return exitCode;
+  for (final pkg in pkgs) {
+    if (await _isDebianPackageInstalled(pkg)) continue;
+    final candidates = [pkg, ...?_debianPackageAliases[pkg]];
+    var installed = false;
+    for (final candidate in candidates) {
+      final code = await _runLinuxDependencyCommand([
+        'apt-get',
+        'install',
+        '-y',
+        candidate,
+      ]);
+      if (code == 0 || await _isDebianPackageInstalled(pkg)) {
+        installed = true;
+        break;
+      }
+    }
+    if (!installed) {
+      return exitCode;
+    }
+  }
+
+  return 0;
 }
 
 Future<int> _runLinuxDependencyCommand(List<String> command) async {
