@@ -62,8 +62,12 @@ jobs:
           # 复制 Flutter 编译产物
           Copy-Item -Path "app/build/windows/x64/runner/Release/*" -Destination $distDir -Recurse
           
-          # 注入 Mihomo 内核与默认配置
+          # 注入 Mihomo 内核、Wintun 网卡驱动与默认配置
           Copy-Item -Path "core/windows/mihomo.exe" -Destination "$distDir/core/windows/"
+          if (Test-Path "core/windows/wintun.dll") {
+            Copy-Item -Path "core/windows/wintun.dll" -Destination "$distDir/core/windows/"
+            Copy-Item -Path "core/windows/wintun.dll" -Destination "$distDir/"
+          }
           Copy-Item -Path "core/configs/default_config.yaml" -Destination "$distDir/core/configs/"
           
           # 打包为 zip
