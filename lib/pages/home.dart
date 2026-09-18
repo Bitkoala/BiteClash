@@ -83,111 +83,17 @@ class _HomeShell extends ConsumerWidget {
           ),
           AnimatedVisibility.bottomNavigation(
             visible: isMobile,
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).brightness == Brightness.dark
-                    ? const Color(0xFF0A0F1D).withValues(alpha: 0.92)
-                    : Colors.white.withValues(alpha: 0.96),
-                borderRadius: BorderRadius.circular(24),
-                border: Border.all(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF1E293B)
-                      : context.colorScheme.outlineVariant.withValues(
-                          alpha: 0.3,
-                        ),
-                  width: 1.2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(
-                      alpha: Theme.of(context).brightness == Brightness.dark
-                          ? 0.4
-                          : 0.08,
-                    ),
-                    blurRadius: 16,
-                    offset: const Offset(0, 4),
+            child: NavigationBar(
+              selectedIndex: state.currentIndex,
+              onDestinationSelected: (index) =>
+                  _handleToPage(navigationItems[index].label, ref),
+              destinations: [
+                for (final item in navigationItems)
+                  NavigationDestination(
+                    icon: item.icon,
+                    label: item.label.label,
                   ),
-                ],
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  for (int i = 0; i < navigationItems.length; i++) ...[
-                    Builder(
-                      builder: (context) {
-                        final item = navigationItems[i];
-                        final isSelected = i == state.currentIndex;
-                        final primary = context.colorScheme.primary;
-                        final isDark =
-                            Theme.of(context).brightness == Brightness.dark;
-
-                        return Material(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(16),
-                          child: InkWell(
-                            onTap: () => _handleToPage(item.label, ref),
-                            borderRadius: BorderRadius.circular(16),
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 200),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: isSelected
-                                    ? primary.withValues(
-                                        alpha: isDark ? 0.22 : 0.15,
-                                      )
-                                    : Colors.transparent,
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
-                                  color: isSelected
-                                      ? primary.withValues(alpha: 0.45)
-                                      : Colors.transparent,
-                                  width: 1,
-                                ),
-                              ),
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconTheme(
-                                    data: IconThemeData(
-                                      color: isSelected
-                                          ? primary
-                                          : context
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                      size: 20,
-                                    ),
-                                    child: item.icon,
-                                  ),
-                                  const SizedBox(height: 3),
-                                  Text(
-                                    item.label.label,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      fontWeight: isSelected
-                                          ? FontWeight.bold
-                                          : FontWeight.w500,
-                                      color: isSelected
-                                          ? (isDark ? Colors.white : primary)
-                                          : context
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ],
-              ),
+              ],
             ),
           ),
         ],

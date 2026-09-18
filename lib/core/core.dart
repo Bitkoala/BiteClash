@@ -1,5 +1,5 @@
 export 'controller.dart';
-export 'core.dart';
+export 'remote.dart';
 export 'desktop/model.dart';
 export 'event.dart';
 export 'lib.dart';

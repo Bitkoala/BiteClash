@@ -43,7 +43,7 @@ void main() {
 
     for (final file in _dartFilesIn('lib')) {
       final source = file.readAsStringSync();
-      if (file.path == _wrappedInTooltip) continue;
+      if (file.path.replaceAll(r'\', '/') == _wrappedInTooltip) continue;
 
       for (final match in _iconButton.allMatches(source)) {
         final arguments = _arguments(source, match.end);

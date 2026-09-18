@@ -13,6 +13,7 @@ import 'package:path/path.dart';
 class CoreController {
   static CoreController? _instance;
   late CoreHandlerInterface _interface;
+  RemoteCoreHandler? _remoteHandler;
 
   CoreController._internal() {
     if (system.isAndroid || system.isIOS) {
@@ -40,13 +41,23 @@ class CoreController {
     return _instance!;
   }
 
-  Future<CoreLifecycleResult> start() => _interface.start();
+  void setRemoteHandler(RemoteCoreHandler? handler) {
+    _remoteHandler = handler;
+  }
 
-  Future<CoreLifecycleResult> restart() => _interface.restart();
+  RemoteCoreHandler? get remoteHandler => _remoteHandler;
 
-  Future<CoreLifecycleResult> stop() => _interface.stop();
+  bool get isRemote => _remoteHandler != null;
 
-  Future<CoreLifecycleResult> close() => _interface.close();
+  CoreHandlerInterface get _activeInterface => _remoteHandler ?? _interface;
+
+  Future<CoreLifecycleResult> start() => _activeInterface.start();
+
+  Future<CoreLifecycleResult> restart() => _activeInterface.restart();
+
+  Future<CoreLifecycleResult> stop() => _activeInterface.stop();
+
+  Future<CoreLifecycleResult> close() => _activeInterface.close();
 
   static Future<void> ensureHomeDir() async {
     final homePath = await appPath.homeDirPath;
@@ -85,13 +96,15 @@ class CoreController {
     await ensureHomeDir();
     await initGeo();
     final homeDirPath = await appPath.homeDirPath;
-    return _interface.init(InitParams(homeDir: homeDirPath, version: version));
+    return _activeInterface.init(
+      InitParams(homeDir: homeDirPath, version: version),
+    );
   }
 
-  FutureOr<bool> get isInit => _interface.isInit;
+  FutureOr<bool> get isInit => _activeInterface.isInit;
 
   Future<String> validateConfig(String path) async {
-    final res = await _interface.validateConfig(path);
+    final res = await _activeInterface.validateConfig(path);
     return res;
   }
 
@@ -99,13 +112,13 @@ class CoreController {
     final path = await appPath.tempFilePath;
     final file = File(path);
     await file.safeWriteAsString(data);
-    final res = await _interface.validateConfig(path);
+    final res = await _activeInterface.validateConfig(path);
     await File(path).safeDelete();
     return res;
   }
 
   Future<String> updateConfig(UpdateParams updateParams) async {
-    return _interface.updateConfig(updateParams);
+    return _activeInterface.updateConfig(updateParams);
   }
 
   Future<String> setupConfig({
@@ -113,10 +126,10 @@ class CoreController {
     Future<void> Function()? preloadInvoke,
   }) async {
     if (preloadInvoke == null) {
-      return _interface.setupConfig(params);
+      return _activeInterface.setupConfig(params);
     }
     final (result, _) = await (
-      _interface.setupConfig(params),
+      _activeInterface.setupConfig(params),
       preloadInvoke(),
     ).wait;
     return result;
@@ -128,7 +141,7 @@ class CoreController {
     required Map<String, String> selectedMap,
     required String defaultTestUrl,
   }) async {
-    final proxiesData = await _interface.getProxies();
+    final proxiesData = await _activeInterface.getProxies();
     return toGroupsTask(
       ComputeGroupsState(
         proxiesData: proxiesData,
@@ -141,69 +154,69 @@ class CoreController {
   }
 
   FutureOr<String> changeProxy(ChangeProxyParams changeProxyParams) async {
-    return await _interface.changeProxy(changeProxyParams);
+    return await _activeInterface.changeProxy(changeProxyParams);
   }
 
   Future<List<TrackerInfo>> getConnections() async {
-    return _interface.getConnections();
+    return _activeInterface.getConnections();
   }
 
   Future<void> closeConnection(String id) async {
-    await _interface.closeConnection(id);
+    await _activeInterface.closeConnection(id);
   }
 
   Future<void> closeConnections() async {
-    await _interface.closeConnections();
+    await _activeInterface.closeConnections();
   }
 
   Future<void> resetConnections() async {
-    await _interface.resetConnections();
+    await _activeInterface.resetConnections();
   }
 
   Future<List<ExternalProvider>> getExternalProviders() async {
-    return _interface.getExternalProviders();
+    return _activeInterface.getExternalProviders();
   }
 
   Future<ExternalProvider?> getExternalProvider(
     String externalProviderName,
   ) async {
-    return _interface.getExternalProvider(externalProviderName);
+    return _activeInterface.getExternalProvider(externalProviderName);
   }
 
   Future<String> updateGeoData(String type) {
-    return _interface.updateGeoData(type);
+    return _activeInterface.updateGeoData(type);
   }
 
   Future<String> sideLoadExternalProvider({
     required String providerName,
     required String data,
   }) {
-    return _interface.sideLoadExternalProvider(
+    return _activeInterface.sideLoadExternalProvider(
       providerName: providerName,
       data: data,
     );
   }
 
   Future<String> updateExternalProvider({required String providerName}) async {
-    return _interface.updateExternalProvider(providerName);
+    return _activeInterface.updateExternalProvider(providerName);
   }
 
   Future<bool> startListener() async {
-    return _interface.startListener();
+    return _activeInterface.startListener();
   }
 
   Future<bool> stopListener() async {
-    return _interface.stopListener();
+    return _activeInterface.stopListener();
   }
 
   Future<Delay?> getDelay(String url, String proxyName) async {
-    return _interface.asyncTestDelay(url, proxyName);
+    return _activeInterface.asyncTestDelay(url, proxyName);
   }
 
   Future<Map<String, dynamic>> getConfig(int id) async {
     final profilePath = await appPath.getProfilePath(id.toString());
     final data = Map<String, dynamic>.from(
-      await _interface.getConfig(profilePath),
+      await _activeInterface.getConfig(profilePath),
     );
     data['rules'] = data['rule'];
     data.remove('rule');
@@ -211,39 +224,39 @@ class CoreController {
   }
 
   Future<Traffic> getTraffic(bool onlyStatisticsProxy) async {
-    return _interface.getTraffic(onlyStatisticsProxy);
+    return _activeInterface.getTraffic(onlyStatisticsProxy);
   }
 
   Future<Traffic> getTotalTraffic(bool onlyStatisticsProxy) async {
-    return _interface.getTotalTraffic(onlyStatisticsProxy);
+    return _activeInterface.getTotalTraffic(onlyStatisticsProxy);
   }
 
   Future<int> getMemory() async {
-    return _interface.getMemory();
+    return _activeInterface.getMemory();
   }
 
   void resetTraffic() {
-    _interface.resetTraffic();
+    _activeInterface.resetTraffic();
   }
 
   void startLog() {
-    _interface.startLog();
+    _activeInterface.startLog();
   }
 
   void stopLog() {
-    _interface.stopLog();
+    _activeInterface.stopLog();
   }
 
   Future<void> requestGc() async {
-    await _interface.forceGc();
+    await _activeInterface.forceGc();
   }
 
   Future<void> crash() async {
-    await _interface.crash();
+    await _activeInterface.crash();
   }
 
   Future<String> clearEffect(int profileId) async {
-    return _interface.clearEffect(profileId);
+    return _activeInterface.clearEffect(profileId);
   }
 }
 

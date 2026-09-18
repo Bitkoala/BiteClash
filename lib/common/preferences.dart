@@ -151,6 +151,22 @@ class Preferences {
     await sharedPreferencesIns?.setString(bootRecordKey, json.encode(record));
   }
 
+  Future<Map<String, dynamic>?> getRemoteControllerMap() async {
+    try {
+      final preferences = await sharedPreferencesCompleter.future;
+      final jsonStr = preferences?.getString('remote_controller');
+      if (jsonStr == null) return null;
+      return json.decode(jsonStr) as Map<String, dynamic>?;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> saveRemoteControllerMap(Map<String, dynamic> map) async {
+    final preferences = await sharedPreferencesCompleter.future;
+    await preferences?.setString('remote_controller', json.encode(map));
+  }
+
   Future<void> clearPreferences() async {
     final sharedPreferencesIns = await sharedPreferencesCompleter.future;
     await sharedPreferencesIns?.clear();

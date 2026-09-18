@@ -12,5 +12,6 @@ analyzer:
     - windows/**
     - macos/**
     - linux/**
+    - legacy_prototype/**
   errors:
     invalid_annotation_target: ignore

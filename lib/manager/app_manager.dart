@@ -4,7 +4,6 @@ import 'package:fl_clash/common/common.dart';
 import 'package:fl_clash/common/permission.dart';
 import 'package:fl_clash/common/system_dns.dart';
 import 'package:fl_clash/enum/enum.dart';
-import 'package:fl_clash/models/models.dart';
 import 'package:fl_clash/providers/providers.dart';
 import 'package:fl_clash/state.dart';
 import 'package:fl_clash/widgets/animated_visibility.dart';
@@ -125,192 +124,6 @@ class AppEnvManager extends StatelessWidget {
       );
     }
     return child;
-  }
-}
-
-class _SidebarRail extends StatelessWidget {
-  const _SidebarRail({
-    required this.items,
-    required this.currentIndex,
-    required this.showLabel,
-    required this.onSelected,
-  });
-
-  final List<NavigationItem> items;
-  final int currentIndex;
-  final bool showLabel;
-  final void Function(int index) onSelected;
-
-  @override
-  Widget build(BuildContext context) {
-    final colorScheme = context.colorScheme;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    if (!showLabel) {
-      return SizedBox(
-        width: 72,
-        child: ListView.separated(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-          itemCount: items.length,
-          separatorBuilder: (_, _) => const SizedBox(height: 8),
-          itemBuilder: (context, index) {
-            final item = items[index];
-            final isSelected = index == currentIndex;
-            return Tooltip(
-              message: item.label.label,
-              waitDuration: const Duration(milliseconds: 300),
-              child: Material(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(14),
-                child: InkWell(
-                  onTap: () => onSelected(index),
-                  borderRadius: BorderRadius.circular(14),
-                  hoverColor: colorScheme.primary.withValues(alpha: 0.08),
-                  child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
-                    height: 48,
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? colorScheme.primary.withValues(
-                              alpha: isDark ? 0.22 : 0.15,
-                            )
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: isSelected
-                            ? colorScheme.primary.withValues(alpha: 0.5)
-                            : Colors.transparent,
-                        width: 1.2,
-                      ),
-                      boxShadow: isSelected && isDark
-                          ? [
-                              BoxShadow(
-                                color: colorScheme.primary.withValues(
-                                  alpha: 0.25,
-                                ),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
-                              ),
-                            ]
-                          : null,
-                    ),
-                    alignment: Alignment.center,
-                    child: IconTheme(
-                      data: IconThemeData(
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.onSurfaceVariant,
-                        size: 22,
-                      ),
-                      child: item.icon,
-                    ),
-                  ),
-                ),
-              ),
-            );
-          },
-        ),
-      );
-    }
-
-    return SizedBox(
-      width: 210,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        itemCount: items.length,
-        separatorBuilder: (_, _) => const SizedBox(height: 6),
-        itemBuilder: (context, index) {
-          final item = items[index];
-          final isSelected = index == currentIndex;
-
-          return Material(
-            color: Colors.transparent,
-            borderRadius: BorderRadius.circular(14),
-            child: InkWell(
-              onTap: () => onSelected(index),
-              borderRadius: BorderRadius.circular(14),
-              hoverColor: colorScheme.primary.withValues(alpha: 0.08),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 14,
-                  vertical: 12,
-                ),
-                decoration: BoxDecoration(
-                  color: isSelected
-                      ? colorScheme.primary.withValues(
-                          alpha: isDark ? 0.22 : 0.15,
-                        )
-                      : Colors.transparent,
-                  borderRadius: BorderRadius.circular(14),
-                  border: Border.all(
-                    color: isSelected
-                        ? colorScheme.primary.withValues(alpha: 0.5)
-                        : Colors.transparent,
-                    width: 1.2,
-                  ),
-                  boxShadow: isSelected && isDark
-                      ? [
-                          BoxShadow(
-                            color: colorScheme.primary.withValues(alpha: 0.25),
-                            blurRadius: 12,
-                            offset: const Offset(0, 3),
-                          ),
-                        ]
-                      : null,
-                ),
-                child: Row(
-                  children: [
-                    IconTheme(
-                      data: IconThemeData(
-                        color: isSelected
-                            ? colorScheme.primary
-                            : colorScheme.onSurfaceVariant,
-                        size: 20,
-                      ),
-                      child: item.icon,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        item.label.label,
-                        style: TextStyle(
-                          fontSize: 13,
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.w500,
-                          color: isSelected
-                              ? (isDark ? Colors.white : colorScheme.primary)
-                              : colorScheme.onSurface.withValues(alpha: 0.85),
-                          letterSpacing: 0.3,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                    if (isSelected)
-                      Container(
-                        width: 5,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: colorScheme.primary,
-                          boxShadow: [
-                            BoxShadow(
-                              color: colorScheme.primary,
-                              blurRadius: 6,
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
   }
 }
 
@@ -492,13 +305,22 @@ class AppSidebarContainer extends ConsumerWidget {
                     Expanded(
                       child: ScrollConfiguration(
                         behavior: const HiddenBarScrollBehavior(),
-                        child: _SidebarRail(
-                          items: navigationItems,
-                          currentIndex: currentIndex,
-                          showLabel: showLabel,
-                          onSelected: (index) {
+                        child: NavigationRail(
+                          extended: showLabel,
+                          selectedIndex: currentIndex,
+                          minWidth: 72,
+                          minExtendedWidth: 210,
+                          backgroundColor: Colors.transparent,
+                          onDestinationSelected: (index) {
                             _handleToPage(ref, navigationItems[index].label);
                           },
+                          destinations: [
+                            for (final item in navigationItems)
+                              NavigationRailDestination(
+                                icon: item.icon,
+                                label: Text(item.label.label),
+                              ),
+                          ],
                         ),
                       ),
                     ),

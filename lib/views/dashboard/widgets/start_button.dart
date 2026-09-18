@@ -228,14 +228,6 @@ class _StartButtonState extends ConsumerState<StartButton>
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
-                border: Border.all(
-                  color: isRunning
-                      ? const Color(0xFF22D3EE)
-                      : (isDark
-                            ? const Color(0xFF334155)
-                            : const Color(0xFFCBD5E1)),
-                  width: 1.5,
-                ),
                 boxShadow: [
                   BoxShadow(
                     color: isRunning
@@ -247,6 +239,16 @@ class _StartButtonState extends ConsumerState<StartButton>
                 ],
               ),
               child: FloatingActionButton(
+                shape: StadiumBorder(
+                  side: BorderSide(
+                    color: isRunning
+                        ? const Color(0xFF22D3EE)
+                        : (isDark
+                              ? const Color(0xFF334155)
+                              : const Color(0xFFCBD5E1)),
+                    width: 1.5,
+                  ),
+                ),
                 backgroundColor: Colors.transparent,
                 elevation: 0,
                 hoverElevation: 0,
