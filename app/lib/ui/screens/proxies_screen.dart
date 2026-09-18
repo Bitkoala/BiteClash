@@ -188,7 +188,7 @@ class ProxiesScreen extends ConsumerWidget {
 
                 return GridView.builder(
                   shrinkWrap: true,
-                  physics: const NeverScrollableScrollExceptionScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: crossAxisCount,
                     mainAxisExtent: 64,

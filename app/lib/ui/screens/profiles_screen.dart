@@ -105,7 +105,7 @@ class ProfilesScreen extends ConsumerWidget {
             else
               ListView.separated(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollExceptionScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 itemCount: profilesState.profiles.length,
                 separatorBuilder: (_, __) => const SizedBox(height: 16),
                 itemBuilder: (context, index) {
