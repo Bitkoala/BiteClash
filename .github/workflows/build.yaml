@@ -283,13 +283,19 @@ jobs:
       - name: Setup Android Signing
         if: startsWith(matrix.platform,'android')
         run: |
-          echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/keystore.jks
-          echo "${{ secrets.SERVICE_JSON }}" | base64 --decode > android/app/google-services.json
-          {
-            echo "keyAlias=${{ secrets.KEY_ALIAS }}"
-            echo "storePassword=${{ secrets.STORE_PASSWORD }}"
-            echo "keyPassword=${{ secrets.KEY_PASSWORD }}"
-          } >> android/local.properties
+          if [ -n "${{ secrets.KEYSTORE }}" ]; then
+            echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/keystore.jks
+          fi
+          if [ -n "${{ secrets.SERVICE_JSON }}" ]; then
+            echo "${{ secrets.SERVICE_JSON }}" | base64 --decode > android/app/google-services.json
+          fi
+          if [ -n "${{ secrets.KEY_ALIAS }}" ]; then
+            {
+              echo "keyAlias=${{ secrets.KEY_ALIAS }}"
+              echo "storePassword=${{ secrets.STORE_PASSWORD }}"
+              echo "keyPassword=${{ secrets.KEY_PASSWORD }}"
+            } >> android/local.properties
+          fi
 
       - name: Setup Go
         uses: actions/setup-go@v5
@@ -346,6 +352,7 @@ jobs:
       - name: Build iOS IPA
         if: startsWith(matrix.platform, 'ios')
         run: |
+          find ~/.pub-cache -name "FPPDeviceInfoPlusPlugin.m" -exec sed -i '' '1s/^/@interface NSProcessInfo (Vision)\n@property (readonly) BOOL isiOSAppOnVision;\n@end\n\n/' {} + 2>/dev/null || true
           flutter build ios --release --no-codesign
           mkdir -p dist Payload
           cp -r build/ios/iphoneos/Runner.app Payload/

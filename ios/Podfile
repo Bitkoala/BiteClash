@@ -1,4 +1,4 @@
-platform :ios, '14.0'
+platform :ios, '15.0'
 
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
@@ -43,7 +43,16 @@ post_install do |installer|
   installer.pods_project.targets.each do |target|
     flutter_additional_ios_build_settings(target)
     target.build_configurations.each do |config|
-      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
+    end
+  end
+
+  Dir.glob("#{installer.sandbox.root}/**/FPPDeviceInfoPlusPlugin.m").concat(
+    Dir.glob("#{ENV['HOME']}/.pub-cache/**/FPPDeviceInfoPlusPlugin.m")
+  ).each do |file|
+    content = File.read(file)
+    unless content.include?('@interface NSProcessInfo (Vision)')
+      File.write(file, "@interface NSProcessInfo (Vision)\n@property (readonly) BOOL isiOSAppOnVision;\n@end\n\n" + content)
     end
   end
 end
