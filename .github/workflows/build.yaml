@@ -320,7 +320,7 @@ jobs:
       - name: Setup Xcode
         if: startsWith(matrix.platform,'macos') || startsWith(matrix.platform,'ios')
         run: |
-          sudo xcode-select -s /Applications/Xcode_15.4.app || sudo xcode-select -s /Applications/Xcode_15.2.app || true
+          sudo xcode-select -s /Applications/Xcode_16.2.app || sudo xcode-select -s /Applications/Xcode_16.1.app || sudo xcode-select -s /Applications/Xcode_16.0.app || sudo xcode-select -s /Applications/Xcode_16.app || sudo xcode-select -s /Applications/Xcode_15.4.app || sudo xcode-select -s /Applications/Xcode_15.2.app || true
           xcodebuild -version
 
       - name: Setup NDK
