@@ -61,8 +61,9 @@ class ChangelogBuilder {
     final commitIdsByTag = <String, Set<String>>{};
 
     if (pending != null && !git.tagExists(pending.tag)) {
+      final fromTag = stable.isEmpty ? boundaryTag?.name : stable.first.name;
       final commits = git.commits(
-        from: stable.isEmpty ? boundaryTag?.name : stable.first.name,
+        from: fromTag != null && git.tagExists(fromTag) ? fromTag : null,
         to: 'HEAD',
       );
       commitIdsByTag[pending.tag] = _idsOf(commits);
@@ -79,9 +80,13 @@ class ChangelogBuilder {
 
     for (var index = 0; index < stable.length; index++) {
       final tag = stable[index];
-      final previous = index + 1 < stable.length
+      final candidatePrevious = index + 1 < stable.length
           ? stable[index + 1].name
           : boundaryTag?.name;
+      final previous =
+          candidatePrevious != null && git.tagExists(candidatePrevious)
+          ? candidatePrevious
+          : null;
       final commits = git.commits(from: previous, to: tag.name);
       commitIdsByTag[tag.name] = _idsOf(commits);
       versions.add(

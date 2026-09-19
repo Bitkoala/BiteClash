@@ -1,7 +1,7 @@
 name: fl_clash
 description: BiteClash - A modern next-generation multi-platform proxy client with bespoke cyberpunk aesthetics.
 publish_to: 'none'
-version: 1.0.0-beta.1+2026091801
+version: 1.0.0-beta.2+2026091901
 environment:
   sdk: '>=3.10.0 <4.0.0'
 
