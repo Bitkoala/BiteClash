@@ -352,7 +352,9 @@ jobs:
       - name: Build iOS IPA
         if: startsWith(matrix.platform, 'ios')
         run: |
+          chmod -R u+w ~/.pub-cache 2>/dev/null || true
           find ~/.pub-cache -name "FPPDeviceInfoPlusPlugin.m" -exec sed -i '' '1s/^/@interface NSProcessInfo (Vision)\n@property (readonly) BOOL isiOSAppOnVision;\n@end\n\n/' {} + 2>/dev/null || true
+          cd ios && pod install && cd ..
           flutter build ios --release --no-codesign
           mkdir -p dist Payload
           cp -r build/ios/iphoneos/Runner.app Payload/

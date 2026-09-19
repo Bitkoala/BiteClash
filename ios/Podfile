@@ -46,13 +46,4 @@ post_install do |installer|
       config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '15.0'
     end
   end
-
-  Dir.glob("#{installer.sandbox.root}/**/FPPDeviceInfoPlusPlugin.m").concat(
-    Dir.glob("#{ENV['HOME']}/.pub-cache/**/FPPDeviceInfoPlusPlugin.m")
-  ).each do |file|
-    content = File.read(file)
-    unless content.include?('@interface NSProcessInfo (Vision)')
-      File.write(file, "@interface NSProcessInfo (Vision)\n@property (readonly) BOOL isiOSAppOnVision;\n@end\n\n" + content)
-    end
-  end
 end
