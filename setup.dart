@@ -348,6 +348,25 @@ Future<int> _ensureLinuxDependencies() async {
     return dlExit == 0 ? 1 : dlExit;
   }
   await _runLinuxDependencyCommand(['chmod', '+x', appimagetool]);
+
+  const rpmbuildWrapper = '/usr/local/bin/rpmbuild';
+  if (!File(rpmbuildWrapper).existsSync() &&
+      File('/usr/bin/rpmbuild').existsSync()) {
+    const wrapperScript = r'''#!/bin/bash
+for arg in "$@"; do
+  if [[ "$arg" == *.spec && -f "$arg" ]]; then
+    sed -i -E '/^Version:/s/[-+]/./g' "$arg"
+  fi
+done
+exec /usr/bin/rpmbuild "$@"
+''';
+    await _runLinuxDependencyCommand([
+      'bash',
+      '-c',
+      'cat << \'EOF\' > $rpmbuildWrapper\n$wrapperScript\nEOF\nchmod +x $rpmbuildWrapper',
+    ]);
+  }
+
   return 0;
 }
 
