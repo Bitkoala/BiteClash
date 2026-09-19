@@ -23,16 +23,15 @@ base class _LocalPlatformFile extends PlatformFile {
   @override
   Future<int> length() => _file.length();
 
-  // ignore: override_on_non_overriding_member
-  @override
-  int lengthSync() => _file.lengthSync();
-
   @override
   Future<Uint8List> readAsBytes() => _file.readAsBytes();
 
   @override
   Stream<Uint8List> readAsByteStream() =>
       _file.openRead().map(Uint8List.fromList);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 void main() {
