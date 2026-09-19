@@ -23,6 +23,7 @@ base class _LocalPlatformFile extends PlatformFile {
   @override
   Future<int> length() => _file.length();
 
+  // ignore: override_on_non_overriding_member
   @override
   int lengthSync() => _file.lengthSync();
 
