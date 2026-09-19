@@ -104,6 +104,7 @@
   "exit": "退出",
   "systemProxy": "系统代理",
   "project": "项目",
+  "upstream": "上游项目",
   "core": "内核",
   "tabAnimation": "选项卡动画",
   "desc": "基于ClashMeta的多平台代理客户端，简单易用，开源无广告。",

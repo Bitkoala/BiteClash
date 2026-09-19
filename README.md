@@ -162,6 +162,18 @@ uci set biteclash.main.enabled=1 && uci commit biteclash
 
 ---
 
+## 🙏 鸣谢与上游开源项目
+
+BiteClash 深度受益于开源社区，在此对以下优秀的开源项目与创作者致以崇高的敬意：
+
+- **[FlClash](https://github.com/chen08209/FlClash)** (Copyright © chen08209) - 本客户端的基础跨平台架构与核心实现。
+- **[Mihomo (Clash.Meta)](https://github.com/MetaCubeX/mihomo)** (Copyright © MetaCubeX) - 核心分流与高性能代理路由引擎。
+- **[Surfboard](https://getsurfboard.com/)** - 移动端界面交互与卡片设计灵感。
+- **[Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev)** - 桌面端网络诊断与连接追踪特性参考。
+
+---
+
 ## 📄 开源许可
 
 本项目遵循 [GPL-3.0 开源许可协议](LICENSE)。
+

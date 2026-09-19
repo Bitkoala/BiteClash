@@ -158,6 +158,7 @@ void main() {
       tester.element(find.byType(AboutView)),
     );
     expect(find.text(appLocalizations.project), findsOneWidget);
+    expect(find.text(appLocalizations.upstream), findsOneWidget);
     expect(find.text(appLocalizations.core), findsOneWidget);
     expect(tester.takeException(), null);
 

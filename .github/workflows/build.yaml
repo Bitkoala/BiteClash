@@ -354,6 +354,7 @@ jobs:
         run: |
           chmod -R u+w ~/.pub-cache 2>/dev/null || true
           find ~/.pub-cache -name "FPPDeviceInfoPlusPlugin.m" -exec sed -i '' '1s/^/@interface NSProcessInfo (Vision)\n@property (readonly) BOOL isiOSAppOnVision;\n@end\n\n/' {} + 2>/dev/null || true
+          flutter precache --ios
           cd ios && pod install && cd ..
           flutter build ios --release --no-codesign
           mkdir -p dist Payload
@@ -361,13 +362,16 @@ jobs:
           zip -r dist/BiteClash-ios.ipa Payload
           cp dist/BiteClash-ios.ipa dist/BiteClash-ios.tipa
           rm -rf Payload
+          cp LICENSE dist/ 2>/dev/null || true
 
       - name: Setup
         if: "!startsWith(matrix.platform, 'ios')"
         env:
           ANDROID_NDK_HOME: ${{ steps.build-ndk.outputs.ndk-path }}
           APPIMAGE_EXTRACT_AND_RUN: '1'
-        run: dart setup.dart ${{ matrix.platform }} ${{ env.IS_STABLE == 'true' && '--env stable' || '' }} -v
+        run: |
+          dart setup.dart ${{ matrix.platform }} ${{ env.IS_STABLE == 'true' && '--env stable' || '' }} -v
+          cp LICENSE dist/ 2>/dev/null || true
 
       - name: Upload
         uses: actions/upload-artifact@v4

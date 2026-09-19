@@ -162,6 +162,18 @@ The router will instantly intercept DNS and outbound traffic with transparent TP
 
 ---
 
+## 🙏 Acknowledgments & Upstream Attribution
+
+BiteClash is built upon the invaluable contributions of the open-source community:
+
+- **[FlClash](https://github.com/chen08209/FlClash)** (Copyright © chen08209) - Foundational cross-platform client architecture and implementation.
+- **[Mihomo (Clash.Meta)](https://github.com/MetaCubeX/mihomo)** (Copyright © MetaCubeX) - High-throughput core routing and proxy engine.
+- **[Surfboard](https://getsurfboard.com/)** - UI and card interaction design inspiration.
+- **[Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev)** - Network diagnostics and connection tracking reference.
+
+---
+
 ## 📄 License
 
 This project is open source under the [GPL-3.0 License](LICENSE).
+

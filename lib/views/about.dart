@@ -41,6 +41,13 @@ class AboutView extends ConsumerWidget {
           trailing: const Icon(Icons.launch),
         ),
         ListItem(
+          title: Text(appLocalizations.upstream),
+          onTap: () {
+            dialogs.openUrl('https://github.com/chen08209/FlClash');
+          },
+          trailing: const Icon(Icons.launch),
+        ),
+        ListItem(
           title: Text(appLocalizations.core),
           onTap: () {
             dialogs.openUrl('https://github.com/MetaCubeX/mihomo');

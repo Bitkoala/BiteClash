@@ -104,6 +104,7 @@
   "exit": "Exit",
   "systemProxy": "System proxy",
   "project": "Project",
+  "upstream": "Upstream",
   "core": "Core",
   "tabAnimation": "Tab animation",
   "desc": "A multi-platform proxy client based on ClashMeta, simple and easy to use, open-source and ad-free.",

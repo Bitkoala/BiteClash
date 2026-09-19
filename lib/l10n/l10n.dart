@@ -815,6 +815,11 @@ class AppLocalizations {
     return Intl.message('Project', name: 'project', desc: '', args: []);
   }
 
+  /// `Upstream`
+  String get upstream {
+    return Intl.message('Upstream', name: 'upstream', desc: '', args: []);
+  }
+
   /// `Core`
   String get core {
     return Intl.message('Core', name: 'core', desc: '', args: []);
